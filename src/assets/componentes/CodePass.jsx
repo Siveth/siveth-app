@@ -13,7 +13,7 @@ export default function CodePass() {
       const code = OTPinput.join(""); // Une los dígitos del código en una cadena
       
       // Realiza la solicitud POST a tu API
-      axios.post('http://localhost:3001/verificar', {
+      axios.post('https://backend-siveth.vercel.app/api/verificar', {
           correo: email,
           codigo: code,
       })

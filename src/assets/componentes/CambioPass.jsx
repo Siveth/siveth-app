@@ -40,7 +40,7 @@ export default function CambioPass() {
     try {
       console.log("Enviando solicitud con correo:", email);
       const response = await axios.post(
-        "http://localhost:3001/cambiarContrasenia",
+        "https://backend-siveth.vercel.app/api/cambiarContrasenia",
         {
           correo: email,
           contraseniaNueva: contraseniaNueva,

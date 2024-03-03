@@ -10,14 +10,14 @@ export default function EnviaEmail() {
 
   function nagivateToOtp() {
     if (email) {
-      axios.post('http://localhost:3001/asignar', {
+      axios.post('https://backend-siveth.vercel.app/api/asignar', {
           correo: email,
         })
         .then((response) => {
           // Verifica si la primera solicitud fue exitosa
           if (response.data.status === 'success') {
             // Si la primera solicitud fue exitosa, realiza la segunda solicitud
-            axios.post('http://localhost:3001/sendemail', {
+            axios.post('https://backend-siveth.vercel.app/api/sendemail', {
                 recipient_email: email,
                 OTP: response.data.code,
               })
