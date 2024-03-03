@@ -26,8 +26,8 @@ export default function EnviaEmail() {
                 navigate("/code", { state: { email: email } }); // Pasar el correo electrónico a la siguiente pantalla
               })
               .catch((error) => {
-                console.error("Error sending recovery email:", error);
-                alert("Hubo un error al enviar el correo de recuperación.");
+                console.error("Error assigning random code:", error.response.data);
+                alert("Hubo un error al asignar el código aleatorio. Por favor, revisa la consola para más detalles.");
               });
           } else {
             // Si la primera solicitud falló, muestra un mensaje de error
