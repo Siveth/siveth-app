@@ -5,7 +5,7 @@ import '../styles/Hide.css';
 import Label from "../componentes/ui/label.jsx";
 import Axios from "axios";
 import ReCAPTCHA from "react-google-recaptcha";
-import { Link,navigate  } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 
 export default function Login({ title }) {
@@ -71,7 +71,7 @@ export default function Login({ title }) {
 
     try {
       const response = await Axios.post(
-        "https://backend-siveth.vercel.app/api/logueo",
+        "https://backend-siveth.vercel.app/api/login",
         {
           correo: email,
           contrasenia: password,
@@ -86,7 +86,7 @@ export default function Login({ title }) {
       const responseData = response.data;
 
       if (response.status === 200 && responseData.status === "success") {
-        navigate("/admin/");
+        window.location.href = "/admin/";
       } else {
         setError("Error en el inicio de sesión: " + responseData.message);
         setAttemptCount(prevCount => prevCount + 1);
