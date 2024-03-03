@@ -71,7 +71,7 @@ export default function Login({ title }) {
 
     try {
       const response = await Axios.post(
-        "https://backend-siveth.vercel.app/api/login",
+        "https://backend-siveth.vercel.app/api/logueo",
         {
           correo: email,
           contrasenia: password,
