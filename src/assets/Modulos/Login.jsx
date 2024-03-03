@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Input from "../componentes/ui/input.jsx";
 import { BiHide, BiShow } from "react-icons/bi";
-import '../styles/Hide.css'
+import '../styles/Hide.css';
 import Label from "../componentes/ui/label.jsx";
 import Axios from "axios";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -71,7 +71,7 @@ export default function Login({ title }) {
 
     try {
       const response = await Axios.post(
-        "https://back-end-siveth.onrender.com/Login",
+        "https://backend-siveth.vercel.app/api/logueo",
         {
           correo: email,
           contrasenia: password,
