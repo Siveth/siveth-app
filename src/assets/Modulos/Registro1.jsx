@@ -89,7 +89,7 @@ function Register() {
     // Resto del código para registrar al usuario
     try {
       const response = await Axios.post(
-        "http://localhost:3001/Create",
+        "https://backend-siveth.vercel.app/api/Create",
         {
           nombre,
           apellidoPaterno,
@@ -107,8 +107,7 @@ function Register() {
       );
 
       if (
-        response.data.status === "success" ||
-        response.data.Status === "success"
+        response.data.status === "success" ||response.data.Status === "success"
       ) {
         alert("Registro exitoso\nTu cuenta ha sido registrada correctamente");
         navigate("/Login");
