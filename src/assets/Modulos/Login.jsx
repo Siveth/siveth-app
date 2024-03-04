@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import Input from "../componentes/ui/input.jsx";
 import { BiHide, BiShow } from "react-icons/bi";
 import '../styles/Hide.css';
@@ -19,6 +20,7 @@ export default function Login({ title }) {
   const [disableButton, setDisableButton] = useState(false);
   const [attemptCount, setAttemptCount] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let timer;
@@ -86,7 +88,7 @@ export default function Login({ title }) {
       const responseData = response.data;
 
       if (response.status === 200 && responseData.status === "success") {
-        window.location.href = "/admin/";
+        navigate('/admin/');
       } else {
         setError("Error en el inicio de sesión: " + responseData.message);
         setAttemptCount(prevCount => prevCount + 1);
