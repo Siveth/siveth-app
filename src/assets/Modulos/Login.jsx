@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Input from "../componentes/ui/input.jsx";
 import { BiHide, BiShow } from "react-icons/bi";
-import '../styles/Hide.css'
+import "../styles/Hide.css";
 import Label from "../componentes/ui/label.jsx";
 import Axios from "axios";
 import ReCAPTCHA from "react-google-recaptcha";
-import { Link } from 'react-router-dom';
-import 'tailwindcss/tailwind.css';
+import { Link } from "react-router-dom";
+import "tailwindcss/tailwind.css";
 
 export default function Login({ title }) {
   const [ShowPwd, setShowPwd] = useState(false);
@@ -19,6 +19,7 @@ export default function Login({ title }) {
   const [disableButton, setDisableButton] = useState(false);
   const [attemptCount, setAttemptCount] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
+  const loginButtonRef = useRef(null);
 
   useEffect(() => {
     let timer;
@@ -26,13 +27,13 @@ export default function Login({ title }) {
       setDisableButton(true);
       setTimeLeft(30);
       timer = setInterval(() => {
-        setTimeLeft(prevTime => prevTime - 1);
+        setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
     } else if (attemptCount >= 6) {
       setDisableButton(true);
       setTimeLeft(60);
       timer = setInterval(() => {
-        setTimeLeft(prevTime => prevTime - 1);
+        setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
     }
     return () => {
@@ -47,8 +48,7 @@ export default function Login({ title }) {
     }
   }, [timeLeft]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isValidEmail = emailPattern.test(email);
     setEmailValid(isValidEmail);
@@ -71,7 +71,7 @@ export default function Login({ title }) {
 
     try {
       const response = await Axios.post(
-        "https://back-end-siveth.onrender.com/Login",
+        "https://back-end-siveth-g8vc.vercel.app/api/logueo",
         {
           correo: email,
           contrasenia: password,
@@ -89,11 +89,22 @@ export default function Login({ title }) {
         window.location.href = "/admin/";
       } else {
         setError("Error en el inicio de sesión: " + responseData.message);
-        setAttemptCount(prevCount => prevCount + 1);
+        setAttemptCount((prevCount) => prevCount + 1);
       }
     } catch (error) {
       setError("Error en el inicio de sesión. Contraseña incorrecta.");
-      setAttemptCount(prevCount => prevCount + 1);
+      setAttemptCount((prevCount) => prevCount + 1);
+      if (attemptCount >= 2) {
+        setDisableButton(true);
+        setTimeLeft(30);
+      }
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSubmit();
     }
   };
 
@@ -107,7 +118,14 @@ export default function Login({ title }) {
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight pb-2.5 text-gray-900">
             Iniciar sesión
           </h2>
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form
+            className="space-y-6"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(e);
+            }}
+            onKeyDown={handleKeyDown}
+          >
             <div>
               <Label htmlFor="email">Correo Electrónico</Label>
               <div className="mt-2">
@@ -117,7 +135,7 @@ export default function Login({ title }) {
                   type="email"
                   autoComplete="email"
                   required
-                  placeholder="example@gmail.com"
+                  placeholder="correo, usuario, telefono"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   style={{
@@ -159,6 +177,7 @@ export default function Login({ title }) {
                   placeholder="****"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   style={{
                     borderColor:
                       passwordValid && password.trim() !== ""
@@ -171,8 +190,16 @@ export default function Login({ title }) {
                     ShowPwd ? "" : "hide-password-icon"
                   }`}
                 />
-                <div className="absolute inset-y-0 top-1.5 right-0 flex items-center pr-3 " onClick={()=>setShowPwd(!ShowPwd)}>
-                  {ShowPwd ? <BiHide className="text-indigo-600 text-xl"/> : <BiShow className="text-indigo-500 text-xl"/>}
+
+                <div
+                  className="absolute inset-y-0 top-1.5 right-0 flex items-center pr-3 "
+                  onClick={() => setShowPwd(!ShowPwd)}
+                >
+                  {ShowPwd ? (
+                    <BiHide className="text-indigo-600 text-xl" />
+                  ) : (
+                    <BiShow className="text-indigo-500 text-xl" />
+                  )}
                 </div>
               </div>
               {!passwordValid && (
@@ -197,18 +224,20 @@ export default function Login({ title }) {
 
             {attemptCount >= 3 && (
               <div className="text-center text-gray-500 text-sm mt-2">
-                {attemptCount < 6 ? 
-                  `Botón bloqueado. Volverá a habilitarse en ${timeLeft} segundos.` :
-                  `Botón bloqueado. Volverá a habilitarse en ${timeLeft} segundos.`
-                }
+                {attemptCount < 6
+                  ? `Botón bloqueado. Volverá a habilitarse en ${timeLeft} segundos.`
+                  : `Botón bloqueado. Volverá a habilitarse en ${timeLeft} segundos.`}
               </div>
             )}
 
             <div>
               <button
+                ref={loginButtonRef}
                 type="submit"
                 className={`flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
-                  attemptCount >= 6 ? "bg-gray-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-500"
+                  attemptCount >= 6
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-indigo-600 hover:bg-indigo-500"
                 }`}
                 disabled={disableButton}
               >

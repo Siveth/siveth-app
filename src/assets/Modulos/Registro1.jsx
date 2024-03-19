@@ -18,13 +18,20 @@ function Register() {
   const [repetirContrasena, setRepetirContrasena] = useState("");
   // const [mensaje, setMensaje] = useState("");
   const [edad, setEdad] = useState("");
+  const [usuario, setUsuario]= useState("");
   const [error, setError] = useState("");
   const [recaptchaValue, setRecaptchaValue] = useState(null);
   const [aceptarTerminos, setAceptarTerminos] = useState(false);
+  const [selectedQuestion, setSelectedQuestion] = useState("")
 
   const validarCampo = (valor) => {
     return valor.trim() !== "";
   };
+
+  const validarUsuario=(valor) => {
+    const usuarioReg = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+    return usuarioReg.test(valor);
+  }
 
   const validarCorreo = (valor) => {
     const correoRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
@@ -46,6 +53,14 @@ function Register() {
     return apellidoRegex.test(valor);
   };
 
+  const securityQuestions = [
+    "¿Cuál es el nombre de tu mascota?",
+    "¿Cuál es tu comida favorita?",
+    "¿Dónde nació tu mamá?",
+    // Agrega más preguntas según sea necesario
+  ];
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -58,6 +73,7 @@ function Register() {
       !validarCampo(telefono) ||
       !validarCampo(contrasenia) ||
       !validarCampo(edad)||
+      !validarCampo(usuario)||
       !aceptarTerminos
     ) {
       setError("Hay campos vacíos");
@@ -98,6 +114,7 @@ function Register() {
           telefono,
           contrasenia,
           edad,
+          usuario,
         },
         {
           headers: {
@@ -135,7 +152,7 @@ function Register() {
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight pb-2.5 text-gray-900">
             Crear Cuenta
           </h2>
-
+  
           <form onSubmit={handleSubmit}>
             <div className="flex mb-4">
               <div className="w-5/12 ml-5">
@@ -166,7 +183,7 @@ function Register() {
                   <span className="text-red-600 text-sm">Nombre inválido</span>
                 )}
               </div>
-
+  
               <div className="w-5/12 ml-5">
                 <label htmlFor="ApellidoP" className="font-bold">
                   Apellido Paterno
@@ -201,8 +218,7 @@ function Register() {
                 )}
               </div>
             </div>
-
-            {/* Apellido Materno */}
+  
             <div className="flex mb-4">
               <div className="w-5/12 ml-5">
                 <label htmlFor="ApellidoM" className="font-bold">
@@ -237,8 +253,41 @@ function Register() {
                   </span>
                 )}
               </div>
-
-              {/* Fecha de nacimiento */}
+  
+              <div className="w-5/12 ml-5">
+                <label htmlFor="Usuario" className="font-bold">
+                  Nombre de usuario
+                </label>
+                <input
+                  type="text"
+                  className={`w-full rounded border border-gray-300 bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 ${
+                    error &&
+                    (!validarCampo(usuario) || !validarUsuario(usuario))
+                      ? "border-red-500"
+                      : validarCampo(usuario) && validarUsuario(usuario)
+                      ? "border-green-500"
+                      : ""
+                  }`}
+                  id="apellidopa"
+                  value={usuario}
+                  onChange={(e) => setUsuario(e.target.value)}
+                  placeholder="Apellido Paterno"
+                  required
+                />
+                {error && !validarCampo(usuario) && (
+                  <span className="text-red-600 text-sm">
+                    Campo obligatorio
+                  </span>
+                )}
+                {error && !validarUsuario(usuario) && (
+                  <span className="text-red-600 text-sm">
+                    Usuario inválido
+                  </span>
+                )}
+              </div>
+            </div>
+  
+            <div className="flex mb-4">
               <div className="w-5/12 ml-5">
                 <label htmlFor="Fecha" className="font-bold">
                   Fecha de nacimiento
@@ -261,10 +310,6 @@ function Register() {
                   </span>
                 )}
               </div>
-            </div>
-
-            {/* Correo */}
-            <div className="flex mb-4">
               <div className="w-5/12 ml-5">
                 <label htmlFor="Email" className="font-bold">
                   Email
@@ -295,8 +340,9 @@ function Register() {
                   </span>
                 )}
               </div>
-
-              {/* Teléfono */}
+            </div>
+  
+            <div className="flex mb-4">
               <div className="w-5/12 ml-5">
                 <label htmlFor="Telefono" className="font-bold">
                   Teléfono
@@ -328,9 +374,6 @@ function Register() {
                   </span>
                 )}
               </div>
-            </div>
-            {/* Contraseña */}
-            <div className="flex mb-4">
               <div className="w-5/12 ml-5">
                 <label htmlFor="Contraseña" className="font-bold">
                   Contraseña
@@ -353,7 +396,6 @@ function Register() {
                     onChange={(e) => setContrasenia(e.target.value)}
                     placeholder="Contraseña"
                     required
-                    
                   />
                   <div
                     className="absolute inset-y-0 top-1.5 right-0 pr-3 flex items-center text-sm leading-5"
@@ -377,8 +419,9 @@ function Register() {
                   </span>
                 )}
               </div>
-
-              {/* Confirmación de contraseña */}
+            </div>
+  
+            <div className="flex mb-4">
               <div className="w-5/12 ml-5">
                 <label htmlFor="RepetirContraseña" className="font-bold">
                   Confirmar Contraseña
@@ -401,7 +444,6 @@ function Register() {
                     onChange={(e) => setRepetirContrasena(e.target.value)}
                     placeholder="Repetir Contraseña"
                     required
-                   
                   />
                   <div
                     className="absolute inset-y-0 top-1.5 right-0 pr-3 flex items-center text-sm leading-5"
@@ -425,8 +467,67 @@ function Register() {
                   </span>
                 )}
               </div>
+              <div className="w-5/12 ml-5">
+                <label htmlFor="preguntaSeguridad" className="font-bold">
+                  Pregunta de seguridad
+                </label>
+                <select
+                  id="preguntaSeguridad"
+                  className="w-full rounded border border-gray-300 bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800"
+                  value={selectedQuestion}
+                  onChange={(e) => setSelectedQuestion(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    Selecciona una pregunta de seguridad
+                  </option>
+                  {securityQuestions.map((question, index) => (
+                    <option key={index} value={question}>
+                      {question}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-
+  
+            <div className="flex mb-4">
+              
+  
+              <div className="w-5/12 ml-5">
+                <label htmlFor="Respuesta" className="font-bold">
+                  Respuesta
+                </label>
+                <input
+                  type="text"
+                  className={`w-full rounded border border-gray-300 bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 ${
+                    error &&
+                    (!validarCampo(apellidoMaterno) ||
+                      !validarApellido(apellidoMaterno))
+                      ? "border-red-500"
+                      : validarCampo(apellidoMaterno) &&
+                        validarApellido(apellidoMaterno)
+                      ? "border-green-500"
+                      : ""
+                  }`}
+                  id="apellidoma"
+                  value={apellidoMaterno}
+                  onChange={(e) => setApellidoMaterno(e.target.value)}
+                  placeholder="Apellido Materno"
+                  required
+                />
+                {error && !validarCampo(apellidoMaterno) && (
+                  <span className="text-red-600 text-sm">
+                    Campo obligatorio
+                  </span>
+                )}
+                {error && !validarApellido(apellidoMaterno) && (
+                  <span className="text-red-600 text-sm">
+                    Apellido materno inválido
+                  </span>
+                )}
+              </div>
+            </div>
+  
             <div className="flex items-center mb-4 ml-5">
               <input
                 type="checkbox"
@@ -440,24 +541,20 @@ function Register() {
                 Acepto los términos y condiciones
               </label>
             </div>
-
-
-            {/* ReCAPTCHA */}
+  
             <div className="flex justify-center mt-4">
               <ReCAPTCHA
                 sitekey="6LcqzmwpAAAAAHS95sakGoUwrQ73VRwYLVullfts"
                 onChange={(value) => setRecaptchaValue(value)}
               />
             </div>
-
-            {/* Mensaje de error */}
+  
             {error && (
               <div className="text-red-600 text-sm text-center mb-4">
                 {error}
               </div>
             )}
-
-            {/* Botón de registro */}
+  
             <div className="flex items-center justify-center">
               <button
                 type="submit"
@@ -471,7 +568,7 @@ function Register() {
       </div>
     </div>
   );
-}
+}  
 
 export default Register;
 

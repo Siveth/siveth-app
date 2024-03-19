@@ -6,6 +6,8 @@ const ReporteVentas = () => {
   const [tipoServicioFilter, setTipoServicioFilter] = useState('');
   const [correoUsuarioFilter, setCorreoUsuarioFilter] = useState('');
   const [fechaFilter, setFechaFilter] = useState('');
+  const [visibleElements, setVisibleElements] = useState(3); // Número de elementos visibles en la tabla
+  const [loading, setLoading] = useState(false); // Estado para controlar la carga de más elementos
 
   const handleTipoServicioChange = (e) => {
     setTipoServicioFilter(e.target.value);
@@ -20,14 +22,12 @@ const ReporteVentas = () => {
   };
 
   const handleApplyFilters = () => {
-    // Construir el cuerpo de la solicitud POST con los parámetros de filtrado
     const filters = {
       tipoServicio: tipoServicioFilter,
       correoUsuario: correoUsuarioFilter,
       fecha: fechaFilter,
     };
 
-    // Hacer la solicitud POST al API de filtrado
     axios.post('http://localhost:3001/api/compras/filtrar', filters)
       .then(response => {
         console.log('Respuesta del servidor (con filtros):', response.data);
@@ -39,7 +39,6 @@ const ReporteVentas = () => {
   };
 
   const handleGetAllData = () => {
-    // Hacer la solicitud GET al API para obtener todos los datos
     axios.get('http://localhost:3001/api/compras')
       .then(response => {
         console.log('Respuesta del servidor (todos los datos):', response.data);
@@ -51,9 +50,37 @@ const ReporteVentas = () => {
   };
 
   useEffect(() => {
-    // Obtener todos los datos al cargar el componente
     handleGetAllData();
+    
+    const intervalId = setInterval(() => {
+      handleGetAllData();
+    }, 60000);
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      clearInterval(intervalId);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
+
+  const handleScroll = () => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop !==
+      document.documentElement.offsetHeight
+    ) {
+      return;
+    }
+
+    if (!loading) {
+      setLoading(true);
+
+      setTimeout(() => {
+        setVisibleElements((prevVisibleElements) => prevVisibleElements + 3);
+        setLoading(false);
+      }, 1000);
+    }
+  };
 
   return (
     <div className="container mx-auto my-10 p-8 bg-white rounded shadow-lg">
@@ -93,7 +120,7 @@ const ReporteVentas = () => {
           Obtener Todos los Datos
         </button>
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" style={{ maxHeight: '500px', overflowY: 'auto' }}>
         <table className="min-w-full border border-gray-300">
           <thead>
             <tr>
@@ -104,7 +131,7 @@ const ReporteVentas = () => {
             </tr>
           </thead>
           <tbody>
-            {ventas.map((venta, index) => (
+            {ventas.slice(0, visibleElements).map((venta, index) => (
               <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : ''}>
                 <td className="py-2 px-4 border-b">{venta.tipo_servicio}</td>
                 <td className="py-2 px-4 border-b">{venta.correo_usuario}</td>
@@ -112,6 +139,11 @@ const ReporteVentas = () => {
                 <td className="py-2 px-4 border-b">{venta.fecha}</td>
               </tr>
             ))}
+            {loading && (
+              <tr>
+                <td colSpan="4" className="text-center py-4">Cargando...</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
