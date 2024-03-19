@@ -150,7 +150,7 @@ export default function Login({ title }) {
               </div>
               {!emailValid && (
                 <span className="text-red-600 text-sm">
-                  Correo electrónico inválido
+                  Correo electrónico inválido1
                 </span>
               )}
             </div>
