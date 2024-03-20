@@ -23,6 +23,8 @@ function Register() {
   const [recaptchaValue, setRecaptchaValue] = useState(null);
   const [aceptarTerminos, setAceptarTerminos] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState("")
+  const [respuestaSeguridad, setRespuestaSeguridad] = useState("");
+
 
   const validarCampo = (valor) => {
     return valor.trim() !== "";
@@ -54,10 +56,12 @@ function Register() {
   };
 
   const securityQuestions = [
-    "¿Cuál es el nombre de tu mascota?",
-    "¿Cuál es tu comida favorita?",
-    "¿Dónde nació tu mamá?",
-    // Agrega más preguntas según sea necesario
+    { id: 1, question: "¿Cuál es tu canción favorita?" },
+    { id: 2, question: "¿Cuál es el nombre de tu escuela primaria?" },
+    { id: 3, question: "¿En que ciudad naciste?" },
+    { id: 4, question: "¿Cuál fue tu primer empleo?" },
+    { id: 5, question: "¿Cual es el ex que mas te ha dolido?" },
+    
   ];
 
 
@@ -102,10 +106,24 @@ function Register() {
   
     setError("");
 
+      // Imprimir los datos antes de enviar la solicitud
+  console.log("Datos a enviar al backend:", {
+    nombre,
+    apellidoPaterno,
+    apellidoMaterno,
+    correo,
+    telefono,
+    contrasenia,
+    edad,
+    usuario,
+    preguntaSeguridadId: selectedQuestion,
+    respuestaSeguridad: respuestaSeguridad,
+  });
+
     // Resto del código para registrar al usuario
     try {
       const response = await Axios.post(
-        "http://localhost:3001/Create",
+        "https://back-end-siveth-g8vc.vercel.app/api/Create",
         {
           nombre,
           apellidoPaterno,
@@ -115,6 +133,8 @@ function Register() {
           contrasenia,
           edad,
           usuario,
+          pregunta: selectedQuestion,
+          respuesta: respuestaSeguridad, // Envía la respuesta de seguridad
         },
         {
           headers: {
@@ -134,8 +154,23 @@ function Register() {
       }
     } catch (error) {
       console.error("Error al enviar la solicitud:", error);
+      console.log("Datos a enviar al backend:", {
+        nombre,
+        apellidoPaterno,
+        apellidoMaterno,
+        correo,
+        telefono,
+        contrasenia,
+        edad,
+        usuario,
+        preguntaSeguridadId: selectedQuestion,
+        respuestaSeguridad: respuestaSeguridad,
+      });
       alert("Error\nOcurrió un error al intentar registrar");
     }
+  };
+  const handleQuestionChange = (event) => {
+    setSelectedQuestion(event.target.value);
   };
 
   return (
@@ -472,20 +507,25 @@ function Register() {
                   Pregunta de seguridad
                 </label>
                 <select
-                  id="preguntaSeguridad"
+                
+        id="securityQuestion"
+        value={selectedQuestion}
+        onChange={handleQuestionChange}
+      
                   className="w-full rounded border border-gray-300 bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800"
-                  value={selectedQuestion}
-                  onChange={(e) => setSelectedQuestion(e.target.value)}
+                  
+                  
                   required
                 >
                   <option value="" disabled>
                     Selecciona una pregunta de seguridad
                   </option>
-                  {securityQuestions.map((question, index) => (
-                    <option key={index} value={question}>
-                      {question}
-                    </option>
-                  ))}
+                  {securityQuestions.map((question) => (
+  <option key={question.id} value={question.id}>
+    {question.question}
+  </option>
+))}
+
                 </select>
               </div>
             </div>
@@ -509,10 +549,10 @@ function Register() {
                       ? "border-green-500"
                       : ""
                   }`}
-                  id="apellidoma"
-                  value={apellidoMaterno}
-                  onChange={(e) => setApellidoMaterno(e.target.value)}
-                  placeholder="Apellido Materno"
+                  id="respuestaSeguridad"
+                  value={respuestaSeguridad}
+                  onChange={(e) => setRespuestaSeguridad(e.target.value)}
+                  placeholder="Respuesta de seguridad"
                   required
                 />
                 {error && !validarCampo(apellidoMaterno) && (

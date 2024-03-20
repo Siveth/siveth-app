@@ -16,6 +16,8 @@ import Ayuda from "./assets/Modulos/Ayuda";
 import EnviaEmail from "./assets/componentes/EnviaEmail";
 import CodePass from "./assets/componentes/CodePass";
 import CambioPass from "./assets/componentes/CambioPass";
+import HeaderUsReg from "./assets/componentes/HeaderUsReg";
+import EnviaPregunta from "./assets/componentes/EnviaPregunta";
 import 'tailwindcss/tailwind.css';
 
 
@@ -40,8 +42,10 @@ function App() {
         <Route path="/reportes" element={<Reportes />} />
         <Route path="/ayuda" element={<Ayuda />} />
         <Route path="/SendEmail" element={<EnviaEmail />} />
+        <Route path="/SendEmailPregunta" element={<EnviaPregunta />} />
         <Route path="/code" element={<CodePass />} />
         <Route path="/changePass" element={<CambioPass />} />
+        <Route path="/LoginReg" element={<HeaderUsReg />} />
           
         
         {/* <Route path="/terms-cond" element={<Terms />} />

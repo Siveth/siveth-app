@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import Input from "../componentes/ui/input.jsx";
 import { BiHide, BiShow } from "react-icons/bi";
-import "../styles/Hide.css";
 import Label from "../componentes/ui/label.jsx";
 import Axios from "axios";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
 
+
 export default function Login({ title }) {
+  const [showModal, setShowModal] = useState(false);
   const [ShowPwd, setShowPwd] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,6 +20,7 @@ export default function Login({ title }) {
   const [disableButton, setDisableButton] = useState(false);
   const [attemptCount, setAttemptCount] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
+  const [userlogueaded, setUserLogueaded] = useState(false);
   const loginButtonRef = useRef(null);
 
   useEffect(() => {
@@ -49,9 +51,6 @@ export default function Login({ title }) {
   }, [timeLeft]);
 
   const handleSubmit = async () => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const isValidEmail = emailPattern.test(email);
-    setEmailValid(isValidEmail);
     const isValidPassword = password.length >= 8;
     setPasswordValid(isValidPassword);
 
@@ -60,12 +59,7 @@ export default function Login({ title }) {
       return;
     }
 
-    if (
-      !isValidEmail ||
-      email.trim() === "" ||
-      !isValidPassword ||
-      password.trim() === ""
-    ) {
+    if (!isValidPassword || password.trim() === "") {
       return;
     }
 
@@ -87,6 +81,8 @@ export default function Login({ title }) {
 
       if (response.status === 200 && responseData.status === "success") {
         window.location.href = "/admin/";
+        setUserLogueaded(true); // Cambiar el estado de logueado
+        setError(""); // Limpiar el mensaje de error
       } else {
         setError("Error en el inicio de sesión: " + responseData.message);
         setAttemptCount((prevCount) => prevCount + 1);
@@ -106,6 +102,14 @@ export default function Login({ title }) {
       e.preventDefault();
       handleSubmit();
     }
+  };
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -132,7 +136,7 @@ export default function Login({ title }) {
                 <Input
                   id="email"
                   name="email"
-                  type="email"
+                  type="text"
                   autoComplete="email"
                   required
                   placeholder="correo, usuario, telefono"
@@ -159,12 +163,40 @@ export default function Login({ title }) {
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Contraseña</Label>
                 <div className="text-sm">
-                  <Link
-                    to="/SendEmail"
-                    className="font-semibold text-indigo-600 hover:text-indigo-500"
-                  >
-                    ¿Olvidó su contraseña?
-                  </Link>
+                  {/* Modal para restablecimiento de contraseña */}
+                  <div>
+                    <span
+                      className="font-semibold text-indigo-600 hover:text-indigo-500 cursor-pointer"
+                      onClick={openModal} // Utiliza openModal() en lugar de openModal(true)
+                    >
+                      ¿Olvidó su contraseña?
+                    </span>
+                    {showModal && ( // Utiliza showModal para controlar la visibilidad del modal
+                      <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+                        <div className="bg-white p-8 rounded shadow-lg">
+                          <h2 className="text-lg font-semibold mb-4">Metdo de restablecimiento</h2>
+                          <p className="text-sm mb-4">
+                            Selecciona el metodo
+                          </p>
+                          <div className="flex justify-end">
+                            <button className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded mr-2" onClick={closeModal}> {/* Utiliza closeModal para cerrar el modal */}
+                              Cancelar
+                            </button>
+                            {/* Aquí va el enlace para redirigir a la pantalla de restablecimiento de contraseña */}
+                            <Link to="/SendEmail" className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded mr-2">
+                              Envar email
+                            </Link>
+
+                            <Link to="/SendEmailPregunta" className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded mr-2">
+                              Pregunta secreta
+                            </Link>
+                          </div>
+
+                          
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="mt-2 relative">
