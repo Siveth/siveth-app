@@ -1,48 +1,58 @@
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function EnviaPregunta() {
- 
+  
+  
   const [email, setEmail] = useState("");
   const [pregunta, setPregunta] = useState("");
   const [respuesta, setRespuesta] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();  
 
   const obtenerPregunta = async () => {
     try {
-        const response = await axios.get(`https://back-end-siveth-g8vc.vercel.app/api/pregunta/${email}`);
-
-        const { ID, Pregunta } = response.data;
-        setPregunta(Pregunta);
-        setShowModal(true);
+      const response = await axios.post('https://back-end-siveth-g8vc.vercel.app/api/pregunta', { correo: email });
+      const { pregunta } = response.data;
+      setPregunta(pregunta.descripcion);
+      setShowModal(true);
     } catch (error) {
-        console.error("Error al obtener la pregunta:", error);
+      console.error("Error al obtener la pregunta:", error);
     }
-};
-
+  };
+  
+  
 
 
   const verificarRespuesta = async () => {
     try {
-      const response = await axios.post("https://back-end-siveth-g8vc.vercel.app/api/verificar-respuesta", {
+      const response = await axios.post("https://back-end-siveth-g8vc.vercel.app/api/verificarPregunta", {
         correo: email,
-        idPregunta: pregunta.ID,
+        idPregunta: pregunta.id,
         respuesta: respuesta,
       });
       console.log("Respuesta verificada correctamente:", response.data);
-      // Aquí puedes manejar la respuesta verificada, por ejemplo, redirigir al usuario
+      
+      // Verifica si la respuesta es correcta
+      if (response.status === 200 && response.data.respuestaCorrecta) {
+        // Redirige a la pantalla CambioPass y pasa el email como estado
+        navigate('/changePass', { state: { email: email } });
+      } else {
+        // Si la respuesta no es correcta, muestra un mensaje de error
+        alert('La respuesta no es correcta. Inténtalo de nuevo.');
+      }
     } catch (error) {
       console.error("Error al verificar la respuesta:", error);
     }
   };
 
+  const handleEnviarRespuesta = () => {
+    verificarRespuesta();
+  };
+
   function navigateToOtp() {
     obtenerPregunta();
-  }
-
-  function handleEnviarRespuesta() {
-    verificarRespuesta();
   }
 
   return (
@@ -121,4 +131,3 @@ export default function EnviaPregunta() {
     </div>
   );
 }
-
