@@ -34,6 +34,8 @@ import CotizaP from "./views/Admin/CotizaP.jsx";
 import CotizaV from "./views/Admin/CotizaV.jsx";
 import Service from "./views/Public/Service.jsx";
 import DemandaEstetica from "./views/Public/DemandaServicios.jsx";
+import Privacidad from "./views/Public/AvisoPrivacidad.jsx";
+import Terminos from "./views/Public/Terminos.jsx";
 
 import 'tailwindcss/tailwind.css';
 
@@ -66,12 +68,11 @@ function App() {
         <Route path="/Paqueteria" element={<Paqueteria />} />
         <Route path="/MudanzaM" element={<Mudanda /> } />
         <Route path="/PaqueteriaP" element={<PaqueteriaP /> }/>
-        <Route path="/ViajesV" element={<ViajesV /> }
-        />
-         <Route path="/Servicio" element={<Service /> }
-        />
-          <Route path="/Demanda" element={<DemandaEstetica /> }
-        />
+        <Route path="/ViajesV" element={<ViajesV /> }/>
+        <Route path="/Servicio" element={<Service /> }/>
+        <Route path="/Demanda" element={<DemandaEstetica /> }/>
+        <Route path="/Privacidad" element={<Privacidad /> }/>
+        <Route path="/Terminos" element={<Terminos /> }/>
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

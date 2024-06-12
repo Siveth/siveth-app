@@ -75,7 +75,7 @@ const Footer = () => {
             </li>
 
             <li>
-            <Link to="/ayuda" >Chat en vivo</Link>
+            <Link className="mr-4 font-medium text-white" to="/ayuda" >Chat en vivo</Link>
             </li>
           </ul>
         </div>
@@ -89,21 +89,22 @@ const Footer = () => {
             
             <li className="flex items-center"  >
             <FaCookieBite className="mr-4 font-medium text-white" /> 
-            <A href="#" >Politicas de Cookies</A>
+            <A className="mr-4 font-medium text-white" href="#" >Politicas de Cookies</A>
             </li>
 
 
             <li className="flex items-center"  >
             <IoDocumentLockOutline className="mr-4 font-medium text-white" />
+            <Link className="mr-4 font-medium text-white" to="/Privacidad" >Politicas de Privacidad</Link>
             
-            <A href="#" >Politicas de Privacidad</A>
             </li>
             
 
             <li className="flex items-center">
             
             <FaClipboardList className="mr-4 font-medium text-white" /> 
-            <A href="#" >Terminos y condiciones</A>
+            <Link className="mr-4 text-white"  to="/Terminos" >Terminos y condiciones</Link>
+            
             </li>
 
 
