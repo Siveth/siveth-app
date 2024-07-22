@@ -107,6 +107,13 @@ const Footer = () => {
             
             </li>
 
+            <li className="flex items-center">
+            
+            <FaClipboardList className="mr-4 font-medium text-white" /> 
+            <Link className="mr-4 text-white"  to="/Alexa" >Integrar con Alexa</Link>
+            
+            </li>
+
 
           </ul>
         </div>

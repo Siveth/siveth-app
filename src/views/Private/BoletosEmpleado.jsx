@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import Modal from 'react-modal';
 import axios from 'axios';
 
-const Autobus = () => {
+const AutobusEmpleado = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
 
@@ -47,11 +47,11 @@ const Autobus = () => {
     [1, 5, 9, 13, 17, 21, 25, 29, 33]
   ];
 
-  //Función para el link de pago
+  // Función para el link de pago con tarjeta
   const handleCreatePaymentLink = async () => {
     setLoading(true);
     try {
-      const response = await axios.post('https://back-end-siveth-g8vc.vercel.app/api/create-payment-link', {
+      const response = await axios.post('http://localhost:3000/api/create-payment-link', {
         name: 'Cliente de ejemplo',
         email: 'cliente@example.com',
         phone: '5555555555',
@@ -59,7 +59,7 @@ const Autobus = () => {
           {
             name: 'Boleto de autobús',
             unit_price: 35000, // En centavos (350.00 MXN)
-            quantity: 1
+            quantity: totalBoletos
           }
         ],
         expires_at: Math.floor(Date.now() / 1000) + (24 * 3600) // 24 horas desde ahora
@@ -79,24 +79,61 @@ const Autobus = () => {
     setLoading(false);
   };
 
+
+ // Función para registrar el pago en efectivo
+ const handleCashPayment = async () => {
+  setLoading(true);
+  try {
+    // Obtén el primer asiento seleccionado o usa un valor por defecto
+    const primerAsientoSeleccionado = asientosNumeroSeleccionados.length > 0 ? asientosNumeroSeleccionados[0] : null;
+
+    // Asegúrate de que el valor de 'asiento' no sea null o undefined
+    if (primerAsientoSeleccionado === null) {
+      alert('No hay asientos seleccionados.');
+      setLoading(false);
+      return;
+    }
+
+    const response = await axios.post('http://localhost:3000/api/register-cash-payment', {
+      fk_usuario: 'alher2803@gmail.com', // Cambia esto según el usuario actual
+      Cantidad_Boletos: totalBoletos,
+      fk_viajes: 1, // Cambia esto según el viaje seleccionado
+      asiento: primerAsientoSeleccionado, // Envía solo un asiento
+      total: totalBoletos * 350 // Suponiendo que cada boleto cuesta 350 MXN
+    });
+
+    if (response.data.status === 'success') {
+      alert('Pago en efectivo registrado exitosamente');
+      setAsientosSeleccionados([]);
+      setAsientosNumeroSeleccionados([]);
+      setTotalBoletos(0);
+    } else {
+      console.error('Error en la respuesta del servidor:', response.data);
+    }
+  } catch (error) {
+    console.error('Error registrando el pago en efectivo:', error.response ? error.response.data : error.message);
+  }
+  setLoading(false);
+};
+
+
   return (
     <div className="flex flex-col md:flex-row">
-     {/* Contenedor del autobús */}
-     <div className="w-full md:w-2/3 bg-white p-4 rounded-lg mb-4 md:mb-0"> {/* Ajustar el ancho a 2/3 en dispositivos medianos y grandes */}
-           <div class="flex justify-center my-4">
-                <div class="flex items-center mr-4">
-                <MdOutlineChair class="w-6 h-6  text-blue-500 "/>
-                    <span class="text-sm">Seleccionado</span>
-                </div>
-                <div class="flex items-center mr-4">
-                <MdOutlineChair class="w-6 h-6 text-orange-500 "/>
-                    <span class="text-sm">Ocupado</span>
-                </div>
-                <div class="flex items-center">
-                <MdOutlineChair class="w-6 h-6 text-black-500 "/>
-                    <span class="text-sm">Disponible</span>
-                </div>
-            </div>
+      <div className="w-full md:w-2/3 bg-white p-4 rounded-lg mb-4 md:mb-0">
+        <div className="flex justify-center my-4">
+          <div className="flex items-center mr-4">
+            <MdOutlineChair className="w-6 h-6 text-blue-500" />
+            <span className="text-sm">Seleccionado</span>
+          </div>
+          <div className="flex items-center mr-4">
+            <MdOutlineChair className="w-6 h-6 text-orange-500" />
+            <span className="text-sm">Ocupado</span>
+          </div>
+          <div className="flex items-center">
+            <MdOutlineChair className="w-6 h-6 text-black-500" />
+            <span className="text-sm">Disponible</span>
+          </div>
+        </div>
         <div className="grid grid-cols-9 gap-4">
           {filas.map((fila, rowIndex) => (
             fila.map((asiento, columnIndex) => {
@@ -142,14 +179,14 @@ const Autobus = () => {
               <p className="font-bold">{precio}</p>
             </div>
             <div className="flex justify-between mb-4">
-            <p>Total de Boletos</p>
-            <p>{totalBoletos}</p>
-          </div>
+              <p>Total de Boletos</p>
+              <p>{totalBoletos}</p>
+            </div>
 
-          <div className="flex justify-between mb-4">
-            <p>Número de los asientos</p>
-            <p>#{asientosNumeroSeleccionados.join(', #')}</p>
-          </div>
+            <div className="flex justify-between mb-4">
+              <p>Número de los asientos</p>
+              <p>#{asientosNumeroSeleccionados.join(', #')}</p>
+            </div>
             <div className="flex justify-between mb-4">
               <p>Viaje de ida</p>
               <p>$200</p>
@@ -165,64 +202,65 @@ const Autobus = () => {
             <p className="font-bold">$320.00 MXN</p>
           </div> 
 
-              
+          <button onClick={handleCreatePaymentLink} disabled={loading} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none">
+            {loading ? 'Creando enlace...' : 'Crear enlace de pago'}
+          </button>
+          <button onClick={handleCashPayment} disabled={loading} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none mt-4">
+            {loading ? 'Registrando pago...' : 'Registrar pago en efectivo'}
+          </button>
           
-             <button onClick={handleCreatePaymentLink} disabled={loading} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none" >
-        {loading ? 'Creando enlace...' : 'Crear enlace de pago'}
-      </button>
-      
-      <Modal
-      isOpen={modalIsOpen}
-      onRequestClose={() => setModalIsOpen(false)}
-      contentLabel="Enlace de Pago"
-      style={{
-        content: {
-          top: '50%',
-          left: '50%',
-          right: 'auto',
-          bottom: 'auto',
-          marginRight: '-50%',
-          transform: 'translate(-50%, -50%)',
-          padding: '20px',
-          borderRadius: '10px',
-          width: '600px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          position: 'relative' // Ajuste para posicionar el botón
-        }
-      }}
-    >
-      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Enlace de Pago</h2>
-      <p style={{ textAlign: 'center', marginBottom: '20px' }}>Tu enlace de pago ha sido creado exitosamente:</p>
-      {paymentLink ? (
-        <a href={paymentLink} target="_blank" rel="noopener noreferrer" style={{ display: 'block', color: 'blue', textAlign: 'center', marginBottom: '60px', wordBreak: 'break-word' }}>
-          {paymentLink}
-        </a>
-      ) : (
-        <p>No se pudo obtener el enlace de pago.</p>
-      )}
-      <button
-        onClick={() => setModalIsOpen(false)}
-        style={{
-          backgroundColor: '#1E90FF',
-          color: 'white',
-          fontWeight: 'bold',
-          padding: '10px 20px',
-          borderRadius: '5px',
-          cursor: 'pointer',
-          border: 'none',
-          position: 'absolute',
-          bottom: '20px',
-          left: '50%',
-          transform: 'translateX(-50%)' // Centra el botón horizontalmente
-        }}
-      >
-        Cerrar
-      </button>
-    </Modal>
+          <Modal
+            isOpen={modalIsOpen}
+            onRequestClose={() => setModalIsOpen(false)}
+            contentLabel="Enlace de Pago"
+            style={{
+              content: {
+                top: '50%',
+                left: '50%',
+                right: 'auto',
+                bottom: 'auto',
+                marginRight: '-50%',
+                transform: 'translate(-50%, -50%)',
+                padding: '20px',
+                borderRadius: '10px',
+                width: '600px',
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                position: 'relative' // Ajuste para posicionar el botón
+              }
+            }}
+          >
+            <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Enlace de Pago</h2>
+            <p style={{ textAlign: 'center', marginBottom: '20px' }}>Tu enlace de pago ha sido creado exitosamente:</p>
+            {paymentLink ? (
+              <a href={paymentLink} target="_blank" rel="noopener noreferrer" style={{ display: 'block', color: 'blue', textAlign: 'center', marginBottom: '60px', wordBreak: 'break-word' }}>
+                {paymentLink}
+              </a>
+            ) : (
+              <p>No se pudo obtener el enlace de pago.</p>
+            )}
+            <button
+              onClick={() => setModalIsOpen(false)}
+              style={{
+                backgroundColor: '#1E90FF',
+                color: 'white',
+                fontWeight: 'bold',
+                padding: '10px 20px',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                border: 'none',
+                position: 'absolute',
+                bottom: '20px',
+                left: '50%',
+                transform: 'translateX(-50%)' // Centra el botón horizontalmente
+              }}
+            >
+              Cerrar
+            </button>
+          </Modal>
         </div>
       </div>
     </div>
   );
 };
 
-export default Autobus;
+export default AutobusEmpleado;
