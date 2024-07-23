@@ -71,12 +71,19 @@ function Boletos() {
 
   const elegirViaje = () => {
     if (viajes.length > 0) {
+      const roleId = localStorage.getItem('roleId');
       const viajeSeleccionado = viajes[0];
       setViajeSeleccionado(viajeSeleccionado); // Establecer el viaje seleccionado en el estado
-      navigate(`/BoletosBus?origen=${viajeSeleccionado.origen}&destino=${viajeSeleccionado.destino}&fecha=${viajeSeleccionado.fecha}&hora=${viajeSeleccionado.hora}&precio=${viajeSeleccionado.precio}`);
+  
+      if (roleId === '3') {
+        navigate(`/BoletosBus?origen=${viajeSeleccionado.origen}&destino=${viajeSeleccionado.destino}&fecha=${viajeSeleccionado.fecha}&hora=${viajeSeleccionado.hora}&precio=${viajeSeleccionado.precio}`);
+      } else {
+        navigate(`/empleado/compraBoletos?origen=${viajeSeleccionado.origen}&destino=${viajeSeleccionado.destino}&fecha=${viajeSeleccionado.fecha}&hora=${viajeSeleccionado.hora}&precio=${viajeSeleccionado.precio}`);
+      }
       setModalIsOpen(false);
     }
   };
+  
 
   return (
     <>
@@ -149,6 +156,7 @@ function Boletos() {
         )}
       </Modal>
       {viajeSeleccionado && <Autobus viaje={viajeSeleccionado} />}
+      {viajeSeleccionado && <AutobusEmpleado viaje={viajeSeleccionado} />}
     </>
   );
 }

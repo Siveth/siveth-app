@@ -10,6 +10,7 @@ import Registro from "./views/Public/Registro.jsx";
 import NotFound from "./views/Public/Error/Error_404.jsx";
 import Sidebar from "./Componentes/Admin/Dashboard.jsx";
 import Code from "./views/Public/Boletos.jsx";
+import EmpleadoBoletos from "./views/Public/Boletos.jsx";
 import Error400 from "./views/Public/Error/Error_400.jsx";
 import Error500 from "./views/Public/Error/Error_500.jsx";
 import Reportes from './views/Admin/Reportes.jsx';
@@ -44,6 +45,8 @@ import ViajesParticulares from "./Componentes/ui/InfViajesP.jsx";
 import DestinosAdmin from "./views/Private/DestinosAdmin.jsx";
 import CodigoA from "./Componentes/ui/CodigoA.jsx";
 
+import Alexa from "./views/Public/AlexaIntegrate.jsx";
+import AutobusEmpleado from  "./views/Private/BoletosEmpleado.jsx";
 
 import 'tailwindcss/tailwind.css';
 
@@ -110,13 +113,32 @@ function App() {
     </>
   );
 
+  const EmpleadoRoutes = () => (
+    <>
+      <Sidebar />
+      <Routes>
+      <Route path="/CotizaM" element={<Mudanza /> }/>
+      <Route path="/CotizaP" element={<CotizaP /> }/>
+      <Route path="/CotizaV" element={<CotizaV /> }/>
+      <Route path="/reportes" element={<Reportes />} />
+      <Route path="/perfil" element={<Perfil />} />
+      <Route path="/compraBoletos" element={<AutobusEmpleado /> }/>
+      <Route path="/Boletos" element={<EmpleadoBoletos />} />
+      </Routes>
+    </>
+  )
+
   return (
     <EmailProvider userEmail={userEmail}>
       <Router>
         <Routes>
           <Route
             path="/admin/*"
-            element={<ProtectedRoute element={<AdminRoutes />} roles={[1, 2]} />}
+            element={<ProtectedRoute element={<AdminRoutes />} roles={[1]} />}
+          />
+          <Route
+            path="/empleado/*"
+            element={<ProtectedRoute element={<EmpleadoRoutes />} roles={[ 2]} />}
           />
           <Route path="/*" element={<PublicRoutes />} />
         </Routes>
