@@ -1,17 +1,26 @@
 import { useState, useEffect } from "react";
 import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
+import axios from 'axios';
 
 function Slider() {
-  const slides = [
-    {
-      url: "https://i.pinimg.com/originals/51/82/ac/5182ac536727d576c78a9320ac62de30.jpg",
-    },
-    {
-      url: "https://wallpapercave.com/wp/wp3386769.jpg",
-    }
-  ];
-
+  const [slides, setSlides] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const fetchSlides = async () => {
+    try {
+      const response = await axios.get('https://back-end-siveth-g8vc.vercel.app/3000/api/slider');
+      const fetchedSlides = response.data.map(record => ({
+        url: `https://back-end-siveth-g8vc.vercel.app/public/images/slider/${record.image}`,
+      }));
+      setSlides(fetchedSlides);
+    } catch (error) {
+      console.error('Error fetching slides:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSlides();
+  }, []);
 
   const prevSlide = () => {
     const isFirstSlide = currentIndex === 0;
@@ -42,9 +51,11 @@ function Slider() {
       <div
         style={{
           backgroundImage: `url(${slides[currentIndex]?.url})`,
-          backgroundSize: "cover", // Ajusta el tamaño de la imagen para cubrir completamente el contenedor
-          backgroundPosition: "center", // Ajusta la posición de la imagen
-          height: "440px" // Nueva altura del contenedor de la imagen
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          height: "440px",
+          width: "100%"
+          
         }}
         className="w-full bg-center duration-500"
       ></div>
@@ -74,4 +85,5 @@ function Slider() {
     </div>
   );
 }
+
 export default Slider;
