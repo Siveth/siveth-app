@@ -98,7 +98,7 @@ const AutobusEmpleado = () => {
       fk_usuario: 'alher2803@gmail.com', // Cambia esto según el usuario actual
       Cantidad_Boletos: totalBoletos,
       fk_viajes: 1, // Cambia esto según el viaje seleccionado
-      asiento: primerAsientoSeleccionado, // Envía solo un asiento
+      Asiento: primerAsientoSeleccionado, // Envía solo un asiento
       total: totalBoletos * 350 // Suponiendo que cada boleto cuesta 350 MXN
     });
 
