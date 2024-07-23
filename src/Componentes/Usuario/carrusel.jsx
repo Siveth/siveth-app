@@ -8,7 +8,7 @@ function Slider() {
 
   const fetchSlides = async () => {
     try {
-      const response = await axios.get('https://back-end-siveth-g8vc.vercel.app/3000/api/slider');
+      const response = await axios.get('https://back-end-siveth-g8vc.vercel.app/api/slider');
       const fetchedSlides = response.data.map(record => ({
         url: `https://back-end-siveth-g8vc.vercel.app/public/images/slider/${record.image}`,
       }));
