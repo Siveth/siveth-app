@@ -37,10 +37,19 @@ import Service from "./views/Public/Service.jsx";
 import DemandaEstetica from "./views/Public/DemandaServicios.jsx";
 import Privacidad from "./views/Public/AvisoPrivacidad.jsx";
 import Terminos from "./views/Public/Terminos.jsx";
+import RecordsAdmin from './views/Admin/RecordsAdmin.jsx'; 
+import SliderAdmin from './views/Admin/SliderAdmin.jsx'; 
+import MudanzaModule from "./Componentes/ui/InfMudanza.jsx";
+import PaqueteriaModule from "./Componentes/ui/InfPaqueteria.jsx";
+import ViajesParticulares from "./Componentes/ui/InfViajesP.jsx";
+import DestinosAdmin from "./views/Private/DestinosAdmin.jsx";
+import CodigoA from "./Componentes/ui/CodigoA.jsx";
+
 import Alexa from "./views/Public/AlexaIntegrate.jsx";
 import AutobusEmpleado from  "./views/Private/BoletosEmpleado.jsx";
 
 import 'tailwindcss/tailwind.css';
+
 
 
 function App() {
@@ -76,9 +85,11 @@ function App() {
         <Route path="/Demanda" element={<DemandaEstetica /> }/>
         <Route path="/Privacidad" element={<Privacidad /> }/>
         <Route path="/Terminos" element={<Terminos /> }/>
-        <Route path="/Alexa" element={<Alexa /> }/>
+        <Route path="/InformacionM" element={<MudanzaModule /> }/>
+        <Route path="/InformacionP" element={<PaqueteriaModule /> }/>
+        <Route path="/InformacionVP" element={<ViajesParticulares /> }/>
+        <Route path="/SixDigitCode" element={<CodigoA /> }/>
         
-
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
@@ -94,6 +105,10 @@ function App() {
       <Route path="/CotizaV" element={<CotizaV /> }/>
         <Route path="/reportes" element={<Reportes />} />
         <Route path="/perfil" element={<Perfil />} />
+        <Route path="/records" element={<RecordsAdmin />} />
+        <Route path="/Slider" element={<SliderAdmin />} /> {/* Nueva ruta */}
+        <Route path="/Destinos" element={<DestinosAdmin /> }/>
+       
       </Routes>
     </>
   );

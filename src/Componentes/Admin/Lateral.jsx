@@ -86,7 +86,7 @@ const Lateral = ({ visible }) => {
           <ul className="mt-2">
             <li className="mb-1 group">
               <Link
-                to="#"
+                to="/admin/records"
                 className="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-orange-400 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100"
               >
                 <MdPostAdd className="ri-home-2-line mr-3 text-lg" />
