@@ -73,7 +73,7 @@ export default function Login({ title }) {
 
     try {
       const loginResponse = await Axios.post(
-        "http://localhost:3000/api/logueo",
+        "https://back-end-siveth-g8vc.vercel.app/api/logueo",
         {
           correo: email,
           contrasenia: password,
@@ -103,7 +103,7 @@ export default function Login({ title }) {
       if (loginStatus === 200) {
         const ipResponse = await Axios.get("http://api64.ipify.org?format=json");
         const ip = ipResponse.data.ip;
-        const url = "http://localhost:3000/api/logueo";
+        const url = "https://back-end-siveth-g8vc.vercel.app/api/logueo";
 
         await Axios.post("https://back-end-siveth-g8vc.vercel.app/api/Logs", {
           ip_usuario: ip,
