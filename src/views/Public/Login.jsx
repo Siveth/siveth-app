@@ -105,7 +105,7 @@ export default function Login({ title }) {
         const ip = ipResponse.data.ip;
         const url = "http://localhost:3000/api/logueo";
 
-        await Axios.post("http://localhost:3000/api/Logs", {
+        await Axios.post("https://back-end-siveth-g8vc.vercel.app/api/Logs", {
           ip_usuario: ip,
           correo: email,
           url: url,
@@ -122,7 +122,7 @@ export default function Login({ title }) {
           const ipResponse = await Axios.get("http://api64.ipify.org?format=json");
           const ip = ipResponse.data.ip;
 
-          await Axios.post("http://localhost:3000/api/LogsBloqueo", {
+          await Axios.post("https://back-end-siveth-g8vc.vercel.app/api/LogsBloqueo", {
             ip_usuario: ip,
             correo: email,
           });
