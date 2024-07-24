@@ -44,7 +44,7 @@ export default function Example() {
               </div>
               <div className="group relative">
                 <img
-                  src={`http://localhost:3000/public/images/${record.image}`} // Ajusta la ruta base de la imagen según tu configuración
+                  src={`https://back-end-siveth-g8vc.vercel.app/public/images/${record.image}`} // Ajusta la ruta base de la imagen según tu configuración
                   alt={record.title}
                   className="mt-3 w-full h-64 object-cover rounded-lg"
                 />
