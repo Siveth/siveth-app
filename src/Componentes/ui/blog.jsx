@@ -8,6 +8,7 @@ const formatDate = (dateString) => {
 
 export default function Example() {
   const [records, setRecords] = useState([]);
+  const [expandedDescriptions, setExpandedDescriptions] = useState({});
 
   useEffect(() => {
     fetchRecords();
@@ -15,7 +16,7 @@ export default function Example() {
 
   const fetchRecords = async () => {
     try {
-      const response = await fetch('https://back-end-siveth-g8vc.vercel.app/api/records'); // Cambia la ruta según tu configuración de ruta en tu servidor
+      const response = await fetch('https://back-end-siveth-g8vc.vercel.app/api/records');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -24,6 +25,15 @@ export default function Example() {
     } catch (error) {
       console.error('Error fetching records:', error);
     }
+  };
+
+  const imageUrlBase = `https://${import.meta.env.VITE_AWS_BUCKET_NAME}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/`;
+
+  const toggleDescription = (id) => {
+    setExpandedDescriptions((prev) => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
   };
 
   return (
@@ -36,25 +46,32 @@ export default function Example() {
 
         <div className="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 lg:mx-0 lg:max-w-none lg:grid-cols-3">
           {records.map((record) => (
-            <article key={record.id} className="flex max-w-xl flex-col items-start justify-between">
-              <div className="flex items-center gap-x-4 text-xs">
-                <time dateTime={record.date} className="text-gray-500">
+            <article key={record.id} className="flex flex-col items-start justify-between">
+              <div className="text-xs text-gray-500 mb-2">
+                <time dateTime={record.date}>
                   {formatDate(record.date)}
                 </time>
               </div>
-              <div className="group relative">
+              <div className="relative">
                 <img
-                  src={`https://back-end-siveth-g8vc.vercel.app/public/images/${record.image}`} // Ajusta la ruta base de la imagen según tu configuración
+                  src={`${imageUrlBase}${record.image}`}
                   alt={record.title}
-                  className="mt-3 w-full h-64 object-cover rounded-lg"
+                  className="w-full h-64 object-cover rounded-lg mb-3"
                 />
-                <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
-                  <a href={record.href}>
-                    <span className="absolute inset-0" />
-                    {record.title}
-                  </a>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {record.title}
                 </h3>
-                <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">{record.description}</p>
+                <p className="mt-3 text-sm text-gray-600">
+                  {expandedDescriptions[record.id]
+                    ? record.description
+                    : `${record.description.slice(0, 100)}...`}
+                  <button
+                    onClick={() => toggleDescription(record.id)}
+                    className="text-blue-500 ml-2"
+                  >
+                    {expandedDescriptions[record.id] ? 'Ver menos' : 'Ver más'}
+                  </button>
+                </p>
               </div>
             </article>
           ))}

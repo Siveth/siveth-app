@@ -40,6 +40,10 @@ export default function Header() {
         })
         .catch((error) => {
           console.error("Error al obtener los datos del usuario:", error);
+          if (error.response && error.response.status === 401) {
+            // Token might be expired or invalid
+            handleLogout();
+          }
         });
     } else {
       setShowUserMenu(false);
@@ -122,13 +126,13 @@ export default function Header() {
   return (
     <header className="bg-blue-700">
       <nav
-        className="mx-auto flex max-w-7xl items-center justify-between p-1 lg:px-8"
+        className="mx-auto flex max-w-7xl items-center justify-between p-1 lg:pl-10 lg:pr-10"
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
           <a href="#" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <img className="h-25 w-auto " src="/src/img/logo.png" alt="" />
+            <img className="h-25 w-auto" src="/src/img/logo.png" alt="" />
           </a>
         </div>
         <div className="flex lg:hidden">
@@ -145,19 +149,12 @@ export default function Header() {
           <Link to="/" className="text-base font-semibold leading-6 text-white">
             Home
           </Link>
-          {/* <Link
-            to="/Demanda"
-            className="text-base font-semibold leading-6 text-white"
-          >
-            Demanda
-          </Link> */}
           <Link
             to="/Boletos"
             className="text-base font-semibold leading-6 text-white"
           >
             Boletos
           </Link>
-          {/* Servicios */}
           <Popover className="relative">
             <Popover.Button className="flex items-center gap-x-1 text-base font-semibold leading-6 text-white">
               Servicios
@@ -197,9 +194,7 @@ export default function Header() {
                           {item.name}
                           <span className="absolute inset-0" />
                         </Link>
-                        <p className="mt-1 text-gray-600">
-                          {item.description}
-                        </p>
+                        <p className="mt-1 text-gray-600">{item.description}</p>
                       </div>
                     </div>
                   ))}
@@ -207,8 +202,6 @@ export default function Header() {
               </Popover.Panel>
             </Transition>
           </Popover>
-
-          {/* Cotizaciones */}
           <Popover className="relative">
             <Popover.Button className="flex items-center gap-x-1 text-base font-semibold leading-6 text-white">
               Cotizaciones
@@ -256,76 +249,99 @@ export default function Header() {
               </Popover.Panel>
             </Transition>
           </Popover>
-
-          {/* Menú de usuario */}
           {showUserMenu && (
-            <Menu as="div" className="relative ml-3">
-              <div className="hidden lg:flex">
-                <Link
-                  to="/MudanzaM"
-                  className="text-base font-semibold leading-6 text-white "
-                >
-                  Buzon<span aria-hidden="true"></span>
-                </Link>
-                {/* Add spacing between welcome text and user menu */}
-                <span className="text-base font-semibold leading-6 text-white mx-2">
-                  Bienvenido, {userData?.Nombre || "Usuario"}
-                </span>
-                <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                  <span className="sr-only">Open user menu</span>
-                  <img
-                    className="h-8 w-8 rounded-full"
-                    src="/src/assets/alan.jpeg"
-                    // src={userData?.imageUrl || "/default-avatar.png"}
-                    alt=""
-                  />
-                </Menu.Button>
-              </div>
-              <Transition
-                as={Fragment}
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
-              >
-                <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {userNavigation.map((item) => (
-                    <Menu.Item key={item.name}>
-                      {({ active }) => (
-                        <Link
-                          to={item.to || "#"}
-                          onClick={item.action}
-                          className={classNames(
-                            active ? "bg-gray-100" : "",
-                            "block px-4 py-2 text-sm text-gray-700"
-                          )}
-                        >
-                          {item.name}
-                        </Link>
-                      )}
-                    </Menu.Item>
-                  ))}
-                </Menu.Items>
-              </Transition>
-            </Menu>
-          )}
-        </Popover.Group>
-        {!isAuthenticated && (
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <Link
-              to="/Login"
-              className="text-base font-semibold leading-6 text-white"
-            >
-              Log in <span aria-hidden="true">&rarr;</span>
-            </Link>
-          </div>
-        )}
-      </nav>
+  <Menu as="div" className="relative ml-3 flex items-center">
+    <div className="hidden lg:flex items-center space-x-4">
+      <Link
+        to="/MudanzaM"
+        className="text-base font-semibold leading-6 text-white"
+      >
+        Buzón
+      </Link>
+     
 
-      <Dialog as="div" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
-        <Dialog.Panel focus="true" className="fixed inset-0 z-10 overflow-y-auto bg-white px-6 py-6 lg:hidden">
+    </div>
+  </Menu>
+)}
+
+        </Popover.Group>
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+          {isAuthenticated ? (
+            <>
+             <span className="text-base font-semibold leading-6 text-white">
+        Bienvenido {userData?.Nombre || "Usuario"}
+      </span>
+              <Menu as="div" className="relative ml-3">
+                <div>
+                  <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                    <span className="sr-only">Open user menu</span>
+                    <img
+                      className="h-8 w-8 rounded-full"
+                      src={
+                        userData && userData.profileImage
+                          ? userData.profileImage
+                          : "https://viajesramos.s3.us-east-2.amazonaws.com/perfil.jpg"
+                      }
+                      alt=""
+                    />
+                  </Menu.Button>
+                </div>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    {userNavigation.map((item) => (
+                      <Menu.Item key={item.name}>
+                        {({ active }) => (
+                          <Link
+                            to={item.to}
+                            onClick={item.action}
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700"
+                            )}
+                          >
+                            {item.name}
+                          </Link>
+                        )}
+                      </Menu.Item>
+                    ))}
+                  </Menu.Items>
+                </Transition>
+              </Menu>
+            </>
+          ) : (
+            <div className="space-x-4">
+              <Link
+                to="/Login"
+                className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-black bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+              >
+                Login
+              </Link>
+              <Link
+                to="/Registro"
+                className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                Registro
+              </Link>
+            </div>
+          )}
+        </div>
+      </nav>
+      <Dialog
+        as="div"
+        className="lg:hidden"
+        open={mobileMenuOpen}
+        onClose={setMobileMenuOpen}
+      >
+        <div className="fixed inset-0 z-10" />
+        <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
@@ -345,29 +361,22 @@ export default function Header() {
               <div className="space-y-2 py-6">
                 <Link
                   to="/"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                  onClick={closeMobileMenu}
+                  className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   Home
                 </Link>
                 <Link
-                  to="/Demanda"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                  onClick={closeMobileMenu}
-                >
-                  Demanda
-                </Link>
-                <Link
                   to="/Boletos"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                  onClick={closeMobileMenu}
+                  className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   Boletos
                 </Link>
                 <Disclosure as="div" className="-mx-3">
                   {({ open }) => (
                     <>
-                      <Disclosure.Button className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
+                      <Disclosure.Button className="flex w-full items-center justify-between rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10">
                         Servicios
                         <ChevronDownIcon
                           className={classNames(
@@ -383,7 +392,8 @@ export default function Header() {
                             key={item.name}
                             as="a"
                             href={item.to}
-                            className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                            className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
+                            onClick={() => setMobileMenuOpen(false)}
                           >
                             {item.name}
                           </Disclosure.Button>
@@ -395,7 +405,7 @@ export default function Header() {
                 <Disclosure as="div" className="-mx-3">
                   {({ open }) => (
                     <>
-                      <Disclosure.Button className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
+                      <Disclosure.Button className="flex w-full items-center justify-between rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10">
                         Cotizaciones
                         <ChevronDownIcon
                           className={classNames(
@@ -411,7 +421,8 @@ export default function Header() {
                             key={item.name}
                             as="a"
                             href={item.to}
-                            className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                            className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
+                            onClick={() => setMobileMenuOpen(false)}
                           >
                             {item.name}
                           </Disclosure.Button>
@@ -421,63 +432,86 @@ export default function Header() {
                   )}
                 </Disclosure>
                 {showUserMenu && (
-                  <div className="py-6">
+                  <div>
                     <Link
                       to="/MudanzaM"
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                      onClick={closeMobileMenu}
+                      className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
+                      onClick={() => setMobileMenuOpen(false)}
                     >
-                      Buzon
-                    </Link>
-                    <Link
-                      to="/PerfilU"
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                      onClick={closeMobileMenu}
-                    >
-                      Tu perfil
-                    </Link>
-                    <Link
-                      to="/SixDigitCode"
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                      onClick={closeMobileMenu}
-                    >
-                      Integrar con Alexa
-                    </Link>
-                    <Link
-                      to="#"
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                      onClick={closeMobileMenu}
-                    >
-                      Configuración
-                    </Link>
-                    <Link
-                      to="/Login"
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                      onClick={handleLogout}
-                    >
-                      Cerrar sesión
+                      Buzón
                     </Link>
                   </div>
                 )}
               </div>
-              {!isAuthenticated && (
-                <div className="py-6">
-                  <Link
-                    to="/Registro"
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                    onClick={closeMobileMenu}
-                  >
-                    Registro
-                  </Link>
-                  <Link
-                    to="/Login"
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                    onClick={closeMobileMenu}
-                  >
-                    Login
-                  </Link>
-                </div>
-              )}
+              <div className="py-6">
+                {isAuthenticated ? (
+                  <>
+                  
+                    <Menu as="div" className="relative ml-3">
+                      
+                    <div className="flex items-center">
+                    <Menu.Button className="flex items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                    <span className="sr-only">Open user menu</span>
+                    <img
+      className="h-8 w-8 rounded-full"
+      src={
+        userData && userData.profileImage
+          ? userData.profileImage
+          : "https://viajesramos.s3.us-east-2.amazonaws.com/perfil.jpg"
+      }
+      alt=""
+    />
+                          
+                        </Menu.Button>
+                        <span className="text-base font-semibold leading-6 text-black ml-3">
+    Bienvenido, {userData?.Nombre || "Usuario"}
+  </span>
+                        
+                       
+                      </div>
+                      <div>
+                    <Link
+                      to="/PerfilU"
+                      className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Perfil
+                    </Link>
+                   
+                    <Link
+        to="/Login"
+        className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
+        onClick={() => {
+          setMobileMenuOpen(false);
+          handleLogout();
+        }}
+      >
+        Cerrar Sesion
+      </Link>
+                  
+                  </div>
+                      
+                    </Menu>
+                  </>
+                ) : (
+                  <div className="space-y-4">
+                    <Link
+                      to="/Login"
+                      className="block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/Registro"
+                      className="block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Registro
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </Dialog.Panel>
@@ -485,3 +519,9 @@ export default function Header() {
     </header>
   );
 }
+
+
+
+
+
+
