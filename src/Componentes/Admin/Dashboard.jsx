@@ -3,13 +3,14 @@ import { useNavigate, Link } from "react-router-dom";
 import Lateral from "./Lateral";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { IoNotifications } from "react-icons/io5";
-import axios from "axios"; // Importa axios para realizar solicitudes HTTP
+import axios from "axios";
 
 const Sidebar = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [totalCotizacionesEnProceso, setTotalCotizacionesEnProceso] =
     useState(0);
+  const [userName, setUserName] = useState(""); // Nuevo estado para el nombre del usuario
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
@@ -24,6 +25,7 @@ const Sidebar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("roleId");
+    localStorage.removeItem("userName"); // También elimina el nombre del usuario si es necesario
     navigate("/Login");
   };
 
@@ -51,7 +53,7 @@ const Sidebar = () => {
       try {
         const response = await axios.get(
           "https://back-end-siveth-g8vc.vercel.app/api/NotificacionesM"
-        ); // Ruta a tu endpoint en el backend
+        );
         setTotalCotizacionesEnProceso(response.data.total);
       } catch (error) {
         console.error(
@@ -64,6 +66,13 @@ const Sidebar = () => {
     fetchTotalCotizacionesEnProceso();
   }, []);
 
+  useEffect(() => {
+    const storedUserName = localStorage.getItem("userName"); // Obtén el nombre del usuario de localStorage
+    if (storedUserName) {
+      setUserName(storedUserName); // Actualiza el estado con el nombre del usuario
+    }
+  }, []);
+
   return (
     <>
       <div className="w-full transition-all">
@@ -71,17 +80,16 @@ const Sidebar = () => {
           <Lateral visible={sidebarVisible} />
         </div>
 
-        <div className="py-2 px-6 bg-blue-700 flex items-center  sticky top-0 left-0 z-30 navbar">
-          <div className="py-2 px-6  flex items-center  shadow-black/5 sticky top-0 left-0 z-30">
+        <div className="py-2 px-6 bg-blue-700 flex items-center sticky top-0 left-0 z-30 navbar">
+          <div className="py-2 px-6 flex items-center shadow-black/5 sticky top-0 left-0 z-30">
             <Bars3Icon
-              className="h-6 w-6 text-lg text-gray-900 font-semibold "
+              className="h-6 w-6 text-lg text-gray-900 font-semibold"
               aria-hidden="true"
               onClick={toggleSidebar}
             />
           </div>
 
           <ul ref={dropdownRef} className="ml-auto flex items-center relative">
-            {/* Icono a la izquierda del menú desplegable */}
             <li className="flex items-center relative">
               <IoNotifications className="h-8 w-8 text-white-600" />
               {totalCotizacionesEnProceso > 0 && (
@@ -100,7 +108,7 @@ const Sidebar = () => {
                   <div className="p-1 bg-white rounded-full focus:outline-none focus:ring">
                     <img
                       className="w-8 h-8 rounded-full"
-                      src="https://laravelui.spruko.com/tailwind/ynex/build/assets/images/faces/9.jpg"
+                      src="https://viajesramos.s3.us-east-2.amazonaws.com/perfil.jpg"
                       alt=""
                     />
                     <div className="top-0 left-7 absolute w-3 h-3 bg-lime-400 border-2 border-white rounded-full animate-ping" />
@@ -109,9 +117,10 @@ const Sidebar = () => {
                 </div>
                 <div className="p-2 md:block text-left">
                   <h2 className="text-base font-semibold leading-6 text-white">
-                    John Doe
+                  <p className="text-white">Administrador</p>
+                    {/* {userName || "User Name"} */}
                   </h2>
-                  <p className="text-xs text-white">Administrator</p>
+                  {/* <p className="text-xs text-white">Administrador</p> */}
                 </div>
               </button>
 
