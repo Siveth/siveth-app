@@ -6,13 +6,17 @@ import RecordList from '../../Componentes/Admin/RecordList';
 const RecordsAdmin = () => {
   const [records, setRecords] = useState([]);
   const [editRecord, setEditRecord] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const fetchRecords = async () => {
+    setLoading(true);
     try {
       const response = await axios.get('https://back-end-siveth-g8vc.vercel.app/api/records');
       setRecords(response.data);
     } catch (error) {
       console.error('Error fetching records', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -29,12 +33,16 @@ const RecordsAdmin = () => {
     fetchRecords();
   }, []);
 
+  if (loading) return <p>Loading...</p>;
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-
-      <div className="">
-        <RecordList records={records} deleteRecord={deleteRecord} setEditRecord={setEditRecord} />
-      </div>
+      <RecordList 
+        records={records} 
+        deleteRecord={deleteRecord} 
+        setEditRecord={setEditRecord} 
+        fetchRecords={fetchRecords}
+      />
     </div>
   );
 };
