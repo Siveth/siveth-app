@@ -51,7 +51,7 @@ const AutobusEmpleado = () => {
   const handleCreatePaymentLink = async () => {
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3000/api/create-payment-link', {
+      const response = await axios.post('https://back-end-siveth-g8vc.vercel.app/api/create-payment-link', {
         name: 'Cliente de ejemplo',
         email: 'cliente@example.com',
         phone: '5555555555',
@@ -94,7 +94,7 @@ const AutobusEmpleado = () => {
       return;
     }
 
-    const response = await axios.post('http://localhost:3000/api/register-cash-payment', {
+    const response = await axios.post('https://back-end-siveth-g8vc.vercel.app/api/register-cash-payment', {
       fk_usuario: 'alher2803@gmail.com', // Cambia esto según el usuario actual
       Cantidad_Boletos: totalBoletos,
       fk_viajes: 1, // Cambia esto según el viaje seleccionado
