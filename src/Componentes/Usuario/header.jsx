@@ -51,9 +51,14 @@ export default function Header() {
   }, [isAuthenticated, roleId]);
 
   const handleLogout = () => {
+    // Limpia los elementos de almacenamiento local
     localStorage.removeItem("token");
     localStorage.removeItem("roleId");
-    navigate("/Login");
+  
+    // Redirige al usuario a la página de inicio de sesión
+    window.location.href = "/Login";
+  
+    // Usar replace para evitar que el usuario regrese a la página de la sesión anterior
   };
 
   const closeMobileMenu = () => {
