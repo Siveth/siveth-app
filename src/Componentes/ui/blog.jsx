@@ -16,7 +16,7 @@ export default function Example() {
 
   const fetchRecords = async () => {
     try {
-      const response = await fetch('https://back-end-siveth-g8vc.vercel.app/api/records');
+      const response = await axios.get('https://back-end-siveth-g8vc.vercel.app/api/records');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
