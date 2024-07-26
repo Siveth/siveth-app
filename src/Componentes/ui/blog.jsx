@@ -18,11 +18,11 @@ export default function Example() {
   const fetchRecords = async () => {
     try {
       const response = await axios.get('https://back-end-siveth-g8vc.vercel.app/api/records');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      if (response.status === 200) {
+        setRecords(response.data);
+      } else {
+        throw new Error(`Unexpected response status: ${response.status}`);
       }
-      const data = await response.json();
-      setRecords(data);
     } catch (error) {
       console.error('Error fetching records:', error);
     }
