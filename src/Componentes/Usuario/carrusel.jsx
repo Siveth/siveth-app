@@ -11,7 +11,7 @@ function Slider() {
 
   const fetchSlides = async () => {
     try {
-      const response = await axios.get('http://back-end-siveth-g8vc.vercel.app/api/slider');
+      const response = await axios.get('https://back-end-siveth-g8vc.vercel.app/api/slider');
       // Filter slides where 'active' is 1 and build the full URL
       const fetchedSlides = response.data
         .filter(record => record.active === 1)
