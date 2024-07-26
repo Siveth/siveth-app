@@ -1,42 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import RecordForm from '../../Componentes/Admin/RecordForm';
 import SliderList from '../../Componentes/Admin/SliderList';
 
-const SliderAdmin = () => {
-  const [records, setRecords] = useState([]);
-  const [editRecord, setEditRecord] = useState(null);
+const SliderAdmin= () => {
+  const [records, setSliders] = useState([]);
+  const [editSlider, setEditSlider] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const fetchRecords = async () => {
+  const fetchSliders = async () => {
+    setLoading(true);
     try {
       const response = await axios.get('https://back-end-siveth-g8vc.vercel.app/api/slider');
-      setRecords(response.data);
+      setSliders(response.data);
     } catch (error) {
       console.error('Error fetching records', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const deleteRecord = async (id) => {
+  const deleteSlider = async (id) => {
     try {
       await axios.delete(`https://back-end-siveth-g8vc.vercel.app/api/slider/${id}`);
-      fetchRecords();
+      fetchSliders();
     } catch (error) {
       console.error('Error deleting record', error);
     }
   };
 
   useEffect(() => {
-    fetchRecords();
+    fetchSliders();
   }, []);
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-
-      <div className="">
-        <SliderList records={records} deleteRecord={deleteRecord} setEditRecord={setEditRecord} />
-      </div>
+      <SliderList 
+        records={records} 
+        deleteSlider={deleteSlider} 
+        setEditSlider={setEditSlider} 
+        fetchSliders={fetchSliders}
+      />
     </div>
   );
 };
 
-export default SliderAdmin;
+export default SliderAdmin
