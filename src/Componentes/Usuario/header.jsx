@@ -85,19 +85,19 @@ export default function Header() {
   const products = [
     {
       name: "Mudanzas",
-      description: "Get a better understanding of your traffic",
+      description: "Mudarte nunca habia sido tan facil",
       icon: ChartPieIcon,
       to: "/Mudanzas",
     },
     {
       name: "Paqueteria",
-      description: "Speak directly to your customers",
+      description: "Envio seguro y protegido",
       icon: TruckIcon,
       to: "/Paqueteria",
     },
     {
       name: "Viajes Particulares",
-      description: "Your customers’ data will be safe and secure",
+      description: "Viaja seguro y facil",
       icon: FingerPrintIcon,
       to: "/ViajesParticulares",
     },
@@ -106,19 +106,19 @@ export default function Header() {
   const Servicios = [
     {
       name: "Mudanzas",
-      description: "Get a better understanding of your traffic",
+      description: "Mudarte nunca habia sido tan facil",
       icon: ChartPieIcon,
       to: "/InformacionM",
     },
     {
       name: "Paqueteria",
-      description: "Speak directly to your customers",
+      description: "Envio seguro y protegido",
       icon: TruckIcon,
       to: "/InformacionP",
     },
     {
       name: "Viajes Particulares",
-      description: "Your customers’ data will be safe and secure",
+      description: "Viaja seguro y facil",
       icon: FingerPrintIcon,
       to: "/InformacionVP",
     },
