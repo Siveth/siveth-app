@@ -505,7 +505,7 @@ export default function Header() {
                       className="block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Login
+                      Inicio de sesión
                     </Link>
                     <Link
                       to="/Registro"
