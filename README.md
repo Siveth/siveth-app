@@ -1,4 +1,4 @@
-# Bienvenidos a siveth movil App 👋
+# Bienvenidos a siveth web App 👋
 
 Sistema Informatico de Viajes Especiales Turisticos de la Huasteca o por sus siglas SIVETH es un
 proyecto desarrollado para la empresa Viajes Especiales Ramos con la finalidad de darle solución
