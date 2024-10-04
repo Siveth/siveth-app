@@ -43,24 +43,31 @@ revisión de código y la implementación de cambios. A continuación, se descri
 trabajo de manera clara y concisa:
 
 **• Ramas Principales:**
-Master (Main): La rama master es la rama principal del repositorio y contiene el
-código fuente estable y probado que se ha desplegado en producción. Se considera la versión
-oficial y lista para su uso por parte de los usuarios finales.
-Desarrollo: La rama Desarrollo es donde se integran todas las características nuevas y
-los cambios provenientes de las ramas de características (feature branches). Es una rama de
-trabajo compartida donde se realizan pruebas de integración antes de fusionar los cambios en la
-rama master.
+Características de un Branching Model
 
-**• Proceso de Fusión (Merge Process):**
-Una vez que una característica está completa y se ha probado localmente, se solicita una
-revisión de código (code review) por parte de otros miembros del equipo. Esto con la finalidad
-de poder probarlo de manera local ates de ponerlo a producción ya que esto evitara posibles
-errores de programación
+1. Ramas Principales (Master/Main):
 
-**• Despliegue a Producción:**
-Este proceso integra la parte de las nuevas características añadida pero ya verificadas
-por parte del equipo de desarrollo, al cual ya se la han aplicado pruebas de diseño, de código,
-funcionalidades y ya esta puesta para ser desplegada en la web (Producción )
+- Cada Branching Model suele tener una rama principal que representa la versión estable y desplegable del software.
+
+- Esta rama contiene el código que se considera "listo para producción".
+
+2. Ramas de Funcionalidad (Feature Branches):
+
+- Se crean ramas de funcionalidad para desarrollar nuevas características o mejoras en el software.
+
+- Estas ramas permiten a los desarrolladores trabajar de manera independiente en tareas específicas sin afectar la rama principal.
+
+3. Ramas de Corrección de Errores (Bug Fix Branches):
+
+- Las ramas de corrección de errores se utilizan para abordar y solucionar problemas o defectos en el software.
+
+- Estas ramas permiten la corrección de errores sin interrumpir el desarrollo de nuevas funciones.
+
+4. Ramas de Publicación (Release Branches):
+
+- Las ramas de publicación se crean para preparar y estabilizar versiones específicas del software antes de su lanzamiento.
+
+- Se utilizan para realizar pruebas finales y garantizar que la versión sea apta para la producción.
 
 ## Estrategia de despliegue
 
