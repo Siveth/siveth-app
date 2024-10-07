@@ -13,7 +13,7 @@ const user = {
 
 function handleLogout(navigate) {
   localStorage.removeItem('token');
-  navigate('/Login');
+  navigate('/');
 }
 
 const userNavigation = [
