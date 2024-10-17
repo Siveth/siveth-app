@@ -54,10 +54,10 @@ export default function Header() {
     // Limpia los elementos de almacenamiento local
     localStorage.removeItem("token");
     localStorage.removeItem("roleId");
-  
+
     // Redirige al usuario a la página de inicio de sesión
     window.location.href = "/Login";
-  
+
     // Usar replace para evitar que el usuario regrese a la página de la sesión anterior
   };
 
@@ -255,27 +255,27 @@ export default function Header() {
             </Transition>
           </Popover>
           {showUserMenu && (
-  <Menu as="div" className="relative ml-3 flex items-center">
-    <div className="hidden lg:flex items-center space-x-4">
-      <Link
-        to="/MudanzaM"
-        className="text-base font-semibold leading-6 text-white"
-      >
-        Buzón
-      </Link>
-     
+            <Menu as="div" className="relative ml-3 flex items-center">
+              <div className="hidden lg:flex items-center space-x-4">
+                <Link
+                  to="/MudanzaM"
+                  className="text-base font-semibold leading-6 text-white"
+                >
+                  Buzón
+                </Link>
 
-    </div>
-  </Menu>
-)}
+
+              </div>
+            </Menu>
+          )}
 
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           {isAuthenticated ? (
             <>
-             <span className="text-base font-semibold leading-6 text-white">
-        Bienvenido {userData?.Nombre || "Usuario"}
-      </span>
+              <span className="text-base font-semibold leading-6 text-white">
+                Bienvenido {userData?.Nombre || "Usuario"}
+              </span>
               <Menu as="div" className="relative ml-3">
                 <div>
                   <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
@@ -395,8 +395,8 @@ export default function Header() {
                         {Servicios.map((item) => (
                           <Disclosure.Button
                             key={item.name}
-                            as="a"
-                            href={item.to}
+                            as={Link}
+                            to={item.to}
                             className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
                             onClick={() => setMobileMenuOpen(false)}
                           >
@@ -451,51 +451,51 @@ export default function Header() {
               <div className="py-6">
                 {isAuthenticated ? (
                   <>
-                  
+
                     <Menu as="div" className="relative ml-3">
-                      
-                    <div className="flex items-center">
-                    <Menu.Button className="flex items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                    <span className="sr-only">Open user menu</span>
-                    <img
-      className="h-8 w-8 rounded-full"
-      src={
-        userData && userData.profileImage
-          ? userData.profileImage
-          : "https://viajesramos.s3.us-east-2.amazonaws.com/perfil.jpg"
-      }
-      alt=""
-    />
-                          
+
+                      <div className="flex items-center">
+                        <Menu.Button className="flex items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                          <span className="sr-only">Open user menu</span>
+                          <img
+                            className="h-8 w-8 rounded-full"
+                            src={
+                              userData && userData.profileImage
+                                ? userData.profileImage
+                                : "https://viajesramos.s3.us-east-2.amazonaws.com/perfil.jpg"
+                            }
+                            alt=""
+                          />
+
                         </Menu.Button>
                         <span className="text-base font-semibold leading-6 text-black ml-3">
-    Bienvenido, {userData?.Nombre || "Usuario"}
-  </span>
-                        
-                       
+                          Bienvenido, {userData?.Nombre || "Usuario"}
+                        </span>
+
+
                       </div>
                       <div>
-                    <Link
-                      to="/PerfilU"
-                      className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Perfil
-                    </Link>
-                   
-                    <Link
-        to="/Login"
-        className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
-        onClick={() => {
-          setMobileMenuOpen(false);
-          handleLogout();
-        }}
-      >
-        Cerrar Sesion
-      </Link>
-                  
-                  </div>
-                      
+                        <Link
+                          to="/PerfilU"
+                          className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          Perfil
+                        </Link>
+
+                        <Link
+                          to="/Login"
+                          className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
+                          onClick={() => {
+                            setMobileMenuOpen(false);
+                            handleLogout();
+                          }}
+                        >
+                          Cerrar Sesion
+                        </Link>
+
+                      </div>
+
                     </Menu>
                   </>
                 ) : (
