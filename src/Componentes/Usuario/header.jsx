@@ -82,7 +82,7 @@ export default function Header() {
     { name: "Cerrar sesión", action: handleLogout },
   ];
 
-  const products = [
+  const cotizacion = [
     {
       name: "Mudanzas",
       description: "Mudarte nunca habia sido tan facil",
@@ -227,7 +227,7 @@ export default function Header() {
             >
               <Popover.Panel className="absolute -left-14 top-full z-10 mt-3 w-max max-w-sm overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
                 <div className="p-4">
-                  {products.map((item) => (
+                  {cotizacion.map((item) => (
                     <div
                       key={item.name}
                       className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50"
@@ -421,7 +421,7 @@ export default function Header() {
                         />
                       </Disclosure.Button>
                       <Disclosure.Panel className="mt-2 space-y-2">
-                        {products.map((item) => (
+                        {cotizacion.map((item) => (
                           <Disclosure.Button
                             key={item.name}
                             as="a"
