@@ -15,11 +15,25 @@ export default function Example() {
     fetchRecords();
   }, []);
 
+  const cacheImages = async (images) => {
+    if ('caches' in window) {
+      const cache = await caches.open('image-cache');
+      images.forEach(image => {
+        cache.add(image.url);
+      });
+    }
+  };
+
   const fetchRecords = async () => {
     try {
       const response = await axios.get('https://back-end-siveth-g8vc.vercel.app/api/records');
       if (response.status === 200) {
-        setRecords(response.data);
+        const fetchedRecords = response.data.map(record => ({
+          ...record,
+          image: `${imageUrlBase}${record.image}`,
+        }));
+        setRecords(fetchedRecords);
+        cacheImages(fetchedRecords);
       } else {
         throw new Error(`Unexpected response status: ${response.status}`);
       }
@@ -29,7 +43,7 @@ export default function Example() {
   };
 
   const imageUrlBase = `https://${import.meta.env.VITE_AWS_BUCKET_NAME}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/`;
-
+  
   const toggleDescription = (id) => {
     setExpandedDescriptions((prev) => ({
       ...prev,
@@ -44,7 +58,6 @@ export default function Example() {
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-4">Lugares más visitados</h2>
           <p className="text-gray-600">¡Anímate a viajar con nosotros!</p>
         </div>
-
         <div className="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 lg:mx-0 lg:max-w-none lg:grid-cols-3">
           {records.map((record) => (
             <article key={record.id} className="flex flex-col items-start justify-between">
@@ -55,7 +68,7 @@ export default function Example() {
               </div>
               <div className="relative">
                 <img
-                  src={`${imageUrlBase}${record.image}`}
+                  src={record.image}
                   alt={record.title}
                   className="w-full h-64 object-cover rounded-lg mb-3"
                 />

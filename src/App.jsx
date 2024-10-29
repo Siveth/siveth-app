@@ -61,6 +61,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+        
         <Route path="/Login" element={<Login />} />
         <Route path="/Registro" element={<Registro />} />
         <Route path="/Calculadora" element={<Calculadora />} />

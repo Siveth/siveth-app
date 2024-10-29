@@ -11,8 +11,8 @@ export default function Paqueteria() {
     codigoPostal: "",
     telefono: "",
     alcaldia: "",
-    numero:"",
-    dimensiones:""
+    numero: "",
+    dimensiones: ""
   });
   const [message, setMessage] = useState(null);
   const [errors, setErrors] = useState({});
@@ -43,14 +43,14 @@ export default function Paqueteria() {
       errors.codigoPostal =
         "El código postal es obligatorio y debe tener 5 caracteres";
     }
-   
+
     if (!formData.telefono || !/^\d{10}$/.test(formData.telefono)) {
       errors.telefono = "El teléfono es obligatorio y debe tener 10 dígitos";
     }
     if (!formData.numero || !/^\d{1,5}$/.test(formData.numero)) {
       errors.numero = "El número es obligatorio y debe tener máximo 5 dígitos";
     }
-    
+
     setErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -62,58 +62,58 @@ export default function Paqueteria() {
     setErrors({ ...errors, [name]: "" });
   };
 
- 
+
 
   const handleCodigoPostalChange = async (e) => {
     const codigoPostal = e.target.value;
     setFormData({ ...formData, codigoPostal });
 
     try {
-        const response = await axios.get(
-            `https://api.copomex.com/query/info_cp/${codigoPostal}?token=pruebas`
-        );
-        const responseData = response.data;
+      const response = await axios.get(
+        `https://api.copomex.com/query/info_cp/${codigoPostal}?token=pruebas`
+      );
+      const responseData = response.data;
 
-        // Imprimir los datos en la consola
-        console.log("Datos de la API de COPOMEX:", responseData);
+      // Imprimir los datos en la consola
+      console.log("Datos de la API de COPOMEX:", responseData);
 
-        const asentamientos = responseData.map((item) => item.response);
+      const asentamientos = responseData.map((item) => item.response);
 
-        // Obtener los nombres de colonias y municipios
-        const colonias = asentamientos.map((asentamiento) => asentamiento.asentamiento);
-        const municipios = asentamientos.map((asentamiento) => asentamiento.municipio);
-        const estados = asentamientos.map((asentamiento)=>asentamiento.estado);
-        const cp = asentamientos.map((asentamiento)=>asentamiento.cp);
+      // Obtener los nombres de colonias y municipios
+      const colonias = asentamientos.map((asentamiento) => asentamiento.asentamiento);
+      const municipios = asentamientos.map((asentamiento) => asentamiento.municipio);
+      const estados = asentamientos.map((asentamiento) => asentamiento.estado);
+      const cp = asentamientos.map((asentamiento) => asentamiento.cp);
 
-        // Actualizar los datos del formulario con la información de COPOMEX
-        setFormData({
-            ...formData,
-            colonia: colonias.join(", "),
-            alcaldia: municipios.join(", "),
-            destino: estados.join(", "),
-            codigoPostal: cp.join(", ")
-        });
+      // Actualizar los datos del formulario con la información de COPOMEX
+      setFormData({
+        ...formData,
+        colonia: colonias.join(", "),
+        alcaldia: municipios.join(", "),
+        destino: estados.join(", "),
+        codigoPostal: cp.join(", ")
+      });
     } catch (error) {
-        console.error("Error al obtener datos del código postal", error);
-        // Manejar el error, por ejemplo, mostrando un mensaje al usuario
+      console.error("Error al obtener datos del código postal", error);
+      // Manejar el error, por ejemplo, mostrando un mensaje al usuario
     }
-};
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (validateForm()) {
-    console.log("Datos enviados", formData);
-    try {
-      const response = await axios.post("https://back-end-siveth-g8vc.vercel.app/api/cotizaP", formData);
-      console.log("Respuesta:", response.data);
-      setMessage("¡Los datos se enviaron correctamente!");
-      // Aquí puedes manejar la respuesta de la API, por ejemplo, mostrar un mensaje de éxito
-    } catch (error) {
-      console.error("Error al enviar los datos:", error);
-      setMessage("Hubo un error al enviar los datos. Inténtalo de nuevo más tarde.");
-      // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje de error al usuario
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      console.log("Datos enviados", formData);
+      try {
+        const response = await axios.post("https://back-end-siveth-g8vc.vercel.app/api/cotizaP", formData);
+        console.log("Respuesta:", response.data);
+        setMessage("¡Los datos se enviaron correctamente!");
+        // Aquí puedes manejar la respuesta de la API, por ejemplo, mostrar un mensaje de éxito
+      } catch (error) {
+        console.error("Error al enviar los datos:", error);
+        setMessage("Hubo un error al enviar los datos. Inténtalo de nuevo más tarde.");
+        // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje de error al usuario
+      }
     }
-  }
-};
+  };
 
 
   return (
@@ -136,10 +136,10 @@ const handleSubmit = async (e) => {
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-3">
                 <label
-                  htmlFor="Origen"
+                  htmlFor="origen"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Origen
+                   Origen
                 </label>
                 <div className="mt-2">
                   <select
@@ -148,13 +148,18 @@ const handleSubmit = async (e) => {
                     id="origen"
                     name="origen"
                     autoComplete="origen-name"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                    className={`block w-full rounded-md border py-1.5 text-gray-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6 ${
+                      errors.origen ? 'border-red-500' : ''
+                    }`}
                   >
                     <option>CDMX</option>
                     <option>Tampico</option>
                     <option>Monterrey Nuevo León</option>
                     <option>Gaudalajara</option>
                   </select>
+                  {errors.origen && (
+                    <p className="mt-1 text-xs text-red-500">{errors.origen}</p>
+                  )}
                 </div>
               </div>
               <div className="sm:col-span-3">
@@ -165,17 +170,21 @@ const handleSubmit = async (e) => {
                   Destino
                 </label>
                 <div className="mt-2">
-                  <input
+                  <select
                     value={formData.destino}
                     onChange={handleChange}
                     id="destino"
                     name="destino"
-                    type="text"
                     autoComplete="destino-name"
-                    className={`block w-full rounded-md border py-1.5 text-gray-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                      errors.destino ? "border-red-500" : ""
+                    className={`block w-full rounded-md border py-1.5 text-gray-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6 ${
+                      errors.destino ? 'border-red-500' : ''
                     }`}
-                  />
+                  >
+                    <option>CDMX</option>
+                    <option>Tampico</option>
+                    <option>Monterrey Nuevo León</option>
+                    <option>Gaudalajara</option>
+                  </select>
                   {errors.destino && (
                     <p className="mt-1 text-xs text-red-500">{errors.destino}</p>
                   )}
@@ -184,7 +193,7 @@ const handleSubmit = async (e) => {
               <div className="sm:col-span-2 sm:col-start-1">
                 <label
                   htmlFor="calle"
-                  className="block text-sm font-medium leading-6 text-gray-900 mt-6"
+                  className="block text-sm font-medium leading-6 text-gray-900"
                 >
                   Calle
                 </label>
@@ -197,7 +206,7 @@ const handleSubmit = async (e) => {
                     id="calle"
                     autoComplete="address-level2"
                     className={`block w-full rounded-md border py-1.5 text-gray-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                      errors.calle ? "border-red-500" : ""
+                      errors.calle ? 'border-red-500' : ''
                     }`}
                   />
                   {errors.calle && (
@@ -209,7 +218,7 @@ const handleSubmit = async (e) => {
               <div className="sm:col-span-2">
                 <label
                   htmlFor="colonia"
-                  className="block text-sm font-medium leading-6 text-gray-900 mt-6"
+                  className="block text-sm font-medium leading-6 text-gray-900"
                 >
                   Colonia
                 </label>
@@ -219,54 +228,50 @@ const handleSubmit = async (e) => {
                     onChange={handleChange}
                     type="text"
                     name="colonia"
-                    id="colonia"
+                    id=
+                    "colonia"
                     autoComplete="address-level1"
                     className={`block w-full rounded-md border py-1.5 text-gray-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                      errors.colonia ? "border-red-500" : ""
+                      errors.colonia ? 'border-red-500' : ''
                     }`}
                   />
                   {errors.colonia && (
-                    <p className="mt-1 text-xs text-red-500">
-                      {errors.colonia}
-                    </p>
+                    <p className="mt-1 text-xs text-red-500">{errors.colonia}</p>
+                  )}
+                </div>  
+              </div>
+
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="codigoPostal"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Código postal del destino
+                </label>
+                <label
+                  htmlFor="codigoPostal"
+                  className="block text-sm font-small leading-1 text-gray-900 mt-1"
+                >
+                  (Llenar este campo primero)
+                </label>
+                <div className="mt-2">
+                  <input
+                    value={formData.codigoPostal}
+                    onChange={handleCodigoPostalChange}
+                    type="text"
+                    name="codigoPostal"
+                    id="codigoPostal"
+                    autoComplete="postal-code"
+                    className={`block w-full rounded-md border py-1.5 text-gray-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${errors.codigoPostal ? "border-red-500" : ""
+                      }`}
+                  />
+                  {errors.codigoPostal && (
+                    <p className="mt-1 text-xs text-red-500">{errors.codigoPostal}</p>
                   )}
                 </div>
               </div>
 
               <div className="sm:col-span-2">
-        <label
-          htmlFor="codigoPostal"
-          className="block text-sm font-medium leading-6 text-gray-900"
-        >
-          Código postal del destino
-        </label>
-        <label
-          htmlFor="codigoPostal"
-          className="block text-sm font-small leading-1 text-gray-900 mt-1"
-        >
-          (Llenar este campo primero)
-        </label>
-        <div className="mt-2">
-          <input
-            value={formData.codigoPostal}
-            onChange={handleCodigoPostalChange} // Modificado aquí
-            type="text"
-            name="codigoPostal"
-            id="codigoPostal"
-            autoComplete="postal-code"
-            className={`block w-full rounded-md border py-1.5 text-gray-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-              errors.codigoPostal ? "border-red-500" : ""
-            }`}
-          />
-          {errors.codigoPostal && (
-            <p className="mt-1 text-xs text-red-500">
-              {errors.codigoPostal}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <div className="sm:col-span-2">
                 <label
                   htmlFor="numero"
                   className="block text-sm font-medium leading-6 text-gray-900"
@@ -281,14 +286,11 @@ const handleSubmit = async (e) => {
                     name="numero"
                     id="numero"
                     autoComplete="address-level1"
-                    className={`block w-full rounded-md border py-1.5 text-gray-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                      errors.numero ? "border-red-500" : ""
-                    }`}
+                    className={`block w-full rounded-md border py-1.5 text-gray-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${errors.numero ? "border-red-500" : ""
+                      }`}
                   />
                   {errors.numero && (
-                    <p className="mt-1 text-xs text-red-500">
-                      {errors.numero}
-                    </p>
+                    <p className="mt-1 text-xs text-red-500">{errors.numero}</p>
                   )}
                 </div>
               </div>
@@ -308,19 +310,14 @@ const handleSubmit = async (e) => {
                     name="alcaldia"
                     id="alcaldia"
                     autoComplete="postal-code"
-                    className={`block w-full rounded-md border py-1.5 text-gray-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                      errors.alcaldia ? "border-red-500" : ""
-                    }`}
+                    className={`block w-full rounded-md border py-1.5 text-gray-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${errors.alcaldia ? "border-red-500" : ""
+                      }`}
                   />
                   {errors.alcaldia && (
-                    <p className="mt-1 text-xs text-red-500">
-                      {errors.alcaldia}
-                    </p>
+                    <p className="mt-1 text-xs text-red-500">{errors.alcaldia}</p>
                   )}
                 </div>
               </div>
-
-              
 
               <div className="sm:col-span-2">
                 <label
@@ -337,410 +334,403 @@ const handleSubmit = async (e) => {
                     name="telefono"
                     type="tel"
                     autoComplete="tel"
-                    className={`block w-full rounded-md border py-1.5 text-gray-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                      errors.telefono ? "border-red-500" : ""
-                    }`}
+                    className={`block w-full rounded-md border py-1.5 text-gray-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${errors.telefono ? "border-red-500" : ""
+                      }`}
                   />
                   {errors.telefono && (
-                    <p className="mt-1 text-xs text-red-500">
-                      {errors.telefono}
-                    </p>
+                    <p className="mt-1 text-xs text-red-500">{errors.telefono}</p>
                   )}
                 </div>
               </div>
-
-             
             </div>
           </div>
 
-          <div id="app" className="mt-6 max-w-xl overflow-y-auto max-h-60 rounded-md bg-gray-100 p-4"
->
-  <h2 className="text-lg font-semibold mb-2">Especificaciones de envio</h2>
-  <ul className="space-y-4">
 
-    <li className="flex items-center space-x-4">
-      <div className="w-1/2 flex items-center">
-        <input
-          id="person-3"
-          name="person-3"
-          type="checkbox"
-          className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-        />
-        <label
-          htmlFor="person-3"
-          className="text-sm font-medium text-gray-900 ml-2"
-        >
-          Teléfono
-        </label>
-      </div>
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Cantidad de paquetes"
-      />
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Dimensiones"
-      />
-    </li>
+          <div id="app" className="mt-6 max-w-xl overflow-y-auto max-h-60 rounded-md bg-gray-100 p-4">
+            <h2 className="text-lg font-semibold mb-2">Especificaciones de envío</h2>
+            <ul className="space-y-4">
+              <li className="flex items-center space-x-4">
+                <div className="w-1/2 flex items-center">
+                  <input
+                    id="item-telefono"
+                    name="item-telefono"
+                    type="checkbox"
+                    className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="item-telefono"
+                    className="text-sm font-medium text-gray-900 ml-2"
+                  >
+                    Teléfono
+                  </label>
+                </div>
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Cantidad de paquetes"
+                />
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Dimensiones"
+                />
+              </li>
 
-    <li className="flex items-center space-x-4">
-      <div className="w-1/2 flex items-center">
-        <input
-          id="person-10"
-          name="person-10"
-          type="checkbox"
-          className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-        />
-        <label
-          htmlFor="person-10"
-          className="text-sm font-medium text-gray-900 ml-2"
-        >
-          Laptop
-        </label>
-      </div>
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Cantidad de paquetes"
-      />
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Dimensiones"
-      />
-    </li>
+              <li className="flex items-center space-x-4">
+                <div className="w-1/2 flex items-center">
+                  <input
+                    id="item-laptop"
+                    name="item-laptop"
+                    type="checkbox"
+                    className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="item-laptop"
+                    className="text-sm font-medium text-gray-900 ml-2"
+                  >
+                    Laptop
+                  </label>
+                </div>
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Cantidad de paquetes"
+                />
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Dimensiones"
+                />
+              </li>
+              <li className="flex items-center space-x-4">
+                <div className="w-1/2 flex items-center">
+                  <input
+                    id="person-1"
+                    name="person-1"
+                    type="checkbox"
+                    className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="person-1"
+                    className="text-sm font-medium text-gray-900 ml-2"
+                  >
+                    Comida
+                  </label>
+                </div>
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Cantidad de paquetes"
+                />
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Dimensiones"
+                />
+              </li>
 
-    <li className="flex items-center space-x-4">
-      <div className="w-1/2 flex items-center">
-        <input
-          id="person-1"
-          name="person-1"
-          type="checkbox"
-          className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-        />
-        <label
-          htmlFor="person-1"
-          className="text-sm font-medium text-gray-900 ml-2"
-        >
-          Comida
-        </label>
-      </div>
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Cantidad de paquetes"
-      />
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Dimensiones"
-      />
-    </li>
+              <li className="flex items-center space-x-4">
+                <div className="w-1/2 flex items-center">
+                  <input
+                    id="person-1"
+                    name="person-1"
+                    type="checkbox"
+                    className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="person-1"
+                    className="text-sm font-medium text-gray-900 ml-2"
+                  >
+                    Sillas
+                  </label>
+                </div>
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Cantidad de paquetes"
+                />
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Dimensiones"
+                />
+              </li>
 
-    <li className="flex items-center space-x-4">
-      <div className="w-1/2 flex items-center">
-        <input
-          id="person-1"
-          name="person-1"
-          type="checkbox"
-          className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-        />
-        <label
-          htmlFor="person-1"
-          className="text-sm font-medium text-gray-900 ml-2"
-        >
-          Sillas
-        </label>
-      </div>
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Cantidad de paquetes"
-      />
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Dimensiones"
-      />
-    </li>
+              <li className="flex items-center space-x-4">
+                <div className="w-1/2 flex items-center">
+                  <input
+                    id="person-4"
+                    name="person-4"
+                    type="checkbox"
+                    className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="person-4"
+                    className="text-sm font-medium text-gray-900 ml-2"
+                  >
+                    Ropero
+                  </label>
+                </div>
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Cantidad de paquetes"
+                />
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Dimensiones"
+                />
 
-    <li className="flex items-center space-x-4">
-      <div className="w-1/2 flex items-center">
-        <input
-          id="person-4"
-          name="person-4"
-          type="checkbox"
-          className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-        />
-        <label
-          htmlFor="person-4"
-          className="text-sm font-medium text-gray-900 ml-2"
-        >
-          Ropero
-        </label>
-      </div>
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Cantidad de paquetes"
-      />
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Dimensiones"
-      />
-      
-    </li>
-    
-    <li className="flex items-center space-x-4">
-      <div className="w-1/2 flex items-center">
-        <input
-          id="person-5"
-          name="person-5"
-          type="checkbox"
-          className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-        />
-        <label
-          htmlFor="person-5"
-          className="text-sm font-medium text-gray-900 ml-2"
-        >
-          Tocador
-        </label>
-      </div>
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Cantidad de paquetes"
-      />
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Dimensiones"
-      />
-    </li>
+              </li>
 
-    <li className="flex items-center space-x-4">
-      <div className="w-1/2 flex items-center">
-        <input
-          id="person-6"
-          name="person-6"
-          type="checkbox"
-          className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-        />
-        <label
-          htmlFor="person-6"
-          className="text-sm font-medium text-gray-900 ml-2"
-        >
-          Poff
-        </label>
-      </div>
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Cantidad de paquetes"
-      />
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Dimensiones"
-      />
-    </li>
+              <li className="flex items-center space-x-4">
+                <div className="w-1/2 flex items-center">
+                  <input
+                    id="person-5"
+                    name="person-5"
+                    type="checkbox"
+                    className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="person-5"
+                    className="text-sm font-medium text-gray-900 ml-2"
+                  >
+                    Tocador
+                  </label>
+                </div>
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Cantidad de paquetes"
+                />
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Dimensiones"
+                />
+              </li>
 
-    <li className="flex items-center space-x-4">
-      <div className="w-1/2 flex items-center">
-        <input
-          id="person-7"
-          name="person-7"
-          type="checkbox"
-          className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-        />
-        <label
-          htmlFor="person-7"
-          className="text-sm font-medium text-gray-900 ml-2"
-        >
-          Sillón
-        </label>
-      </div>
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Cantidad de paquetes"
-      />
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Dimensiones"
-      />
-    </li>
+              <li className="flex items-center space-x-4">
+                <div className="w-1/2 flex items-center">
+                  <input
+                    id="person-6"
+                    name="person-6"
+                    type="checkbox"
+                    className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="person-6"
+                    className="text-sm font-medium text-gray-900 ml-2"
+                  >
+                    Poff
+                  </label>
+                </div>
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Cantidad de paquetes"
+                />
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Dimensiones"
+                />
+              </li>
 
-    <li className="flex items-center space-x-4">
-      <div className="w-1/2 flex items-center">
-        <input
-          id="person-8"
-          name="person-8"
-          type="checkbox"
-          className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-        />
-        <label
-          htmlFor="person-8"
-          className="text-sm font-medium text-gray-900 ml-2"
-        >
-          Televisión
-        </label>
-      </div>
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Cantidad de paquetes"
-      />
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Dimensiones"
-      />
-    </li>
+              <li className="flex items-center space-x-4">
+                <div className="w-1/2 flex items-center">
+                  <input
+                    id="person-7"
+                    name="person-7"
+                    type="checkbox"
+                    className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="person-7"
+                    className="text-sm font-medium text-gray-900 ml-2"
+                  >
+                    Sillón
+                  </label>
+                </div>
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Cantidad de paquetes"
+                />
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Dimensiones"
+                />
+              </li>
 
-    <li className="flex items-center space-x-4">
-      <div className="w-1/2 flex items-center">
-        <input
-          id="person-9"
-          name="person-9"
-          type="checkbox"
-          className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-        />
-        <label
-          htmlFor="person-9"
-          className="text-sm font-medium text-gray-900 ml-2"
-        >
-          Espejo
-        </label>
-      </div>
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Cantidad de paquetes"
-      />
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Dimensiones"
-      />
-    </li>
+              <li className="flex items-center space-x-4">
+                <div className="w-1/2 flex items-center">
+                  <input
+                    id="person-8"
+                    name="person-8"
+                    type="checkbox"
+                    className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="person-8"
+                    className="text-sm font-medium text-gray-900 ml-2"
+                  >
+                    Televisión
+                  </label>
+                </div>
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Cantidad de paquetes"
+                />
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Dimensiones"
+                />
+              </li>
 
-    <li className="flex items-center space-x-4">
-      <div className="w-1/2 flex items-center">
-        <input
-          id="person-10"
-          name="person-10"
-          type="checkbox"
-          className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-        />
-        <label
-          htmlFor="person-10"
-          className="text-sm font-medium text-gray-900 ml-2"
-        >
-          Escritorio
-        </label>
-      </div>
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Cantidad de paquetes"
-      />
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Dimensiones"
-      />
-    </li>
+              <li className="flex items-center space-x-4">
+                <div className="w-1/2 flex items-center">
+                  <input
+                    id="person-9"
+                    name="person-9"
+                    type="checkbox"
+                    className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="person-9"
+                    className="text-sm font-medium text-gray-900 ml-2"
+                  >
+                    Espejo
+                  </label>
+                </div>
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Cantidad de paquetes"
+                />
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Dimensiones"
+                />
+              </li>
 
-    <li className="flex items-center space-x-4">
-      <div className="w-1/2 flex items-center">
-        <input
-          id="person-10"
-          name="person-10"
-          type="checkbox"
-          className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-        />
-        <label
-          htmlFor="person-10"
-          className="text-sm font-medium text-gray-900 ml-2"
-        >
-          Buró
-        </label>
-      </div>
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Cantidad de paquetes"
-      />
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Dimensiones"
-      />
-    </li>
+              <li className="flex items-center space-x-4">
+                <div className="w-1/2 flex items-center">
+                  <input
+                    id="person-10"
+                    name="person-10"
+                    type="checkbox"
+                    className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="person-10"
+                    className="text-sm font-medium text-gray-900 ml-2"
+                  >
+                    Escritorio
+                  </label>
+                </div>
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Cantidad de paquetes"
+                />
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Dimensiones"
+                />
+              </li>
+
+              <li className="flex items-center space-x-4">
+                <div className="w-1/2 flex items-center">
+                  <input
+                    id="person-10"
+                    name="person-10"
+                    type="checkbox"
+                    className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="person-10"
+                    className="text-sm font-medium text-gray-900 ml-2"
+                  >
+                    Buró
+                  </label>
+                </div>
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Cantidad de paquetes"
+                />
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Dimensiones"
+                />
+              </li>
 
 
-    <li className="flex items-center space-x-4">
-      <div className="w-1/2 flex items-center">
-        <input
-          id="person-1"
-          name="person-1"
-          type="checkbox"
-          className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-        />
-        <label
-          htmlFor="person-1"
-          className="text-sm font-medium text-gray-900 ml-2"
-        >
-          Refrigerador
-        </label>
-      </div>
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Cantidad de paquetes"
-      />
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Dimensiones"
-      />
-    </li>
+              <li className="flex items-center space-x-4">
+                <div className="w-1/2 flex items-center">
+                  <input
+                    id="person-1"
+                    name="person-1"
+                    type="checkbox"
+                    className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="person-1"
+                    className="text-sm font-medium text-gray-900 ml-2"
+                  >
+                    Refrigerador
+                  </label>
+                </div>
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Cantidad de paquetes"
+                />
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Dimensiones"
+                />
+              </li>
 
 
-    <li className="flex items-center space-x-4">
-      <div className="w-1/2 flex items-center">
-        <input
-          id="person-1"
-          name="person-1"
-          type="checkbox"
-          className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-        />
-        <label
-          htmlFor="person-1"
-          className="text-sm font-medium text-gray-900 ml-2"
-        >
-          Trastero
-        </label>
-      </div>
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Cantidad de paquetes"
-      />
-      <input
-        type="number"
-        className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Dimensiones"
-      />
-    </li>
+              <li className="flex items-center space-x-4">
+                <div className="w-1/2 flex items-center">
+                  <input
+                    id="person-1"
+                    name="person-1"
+                    type="checkbox"
+                    className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="person-1"
+                    className="text-sm font-medium text-gray-900 ml-2"
+                  >
+                    Trastero
+                  </label>
+                </div>
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Cantidad de paquetes"
+                />
+                <input
+                  type="number"
+                  className="border-gray-300 rounded-md h-8 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Dimensiones"
+                />
+              </li>
 
-  </ul>
-</div>
+            </ul>
+          </div>
 
 
           {message && (
@@ -752,7 +742,7 @@ const handleSubmit = async (e) => {
 
 
 
-      
+
 
 
 
