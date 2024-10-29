@@ -12,10 +12,11 @@ const urlsToCache = [
   '/Privacidad',
   '/InformacionM',
   '/InformacionP',
-  '/InformacionVP',  // Otra pantalla offline
-  '/assets/images/imagen1.png',
-  '/assets/images/imagen2.png',
-  // Añade aquí todas las URLs que quieres almacenar en caché
+  '/InformacionVP',  
+  '/assets/mudanzas.jpeg',
+  '/assets/R.jpeg',
+  '/assets/urban.png',
+  
 ];
 
 self.addEventListener('install', (event) => {
