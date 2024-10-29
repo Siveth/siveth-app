@@ -7,7 +7,7 @@ import 'react-chatbot-kit/build/main.css';
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js').then((registration) => {
+    navigator.serviceWorker.register('/Service-worker.js').then((registration) => {
       console.log('Service Worker registrado: ', registration);
     }).catch((registrationError) => {
       console.log('Error en el registro del Service Worker: ', registrationError);
