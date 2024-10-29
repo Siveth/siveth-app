@@ -11,11 +11,19 @@ const Footer = () => {
   <div className="mx-auto max-w-screen-xl space-y-8 px-4 py-8 sm:px-6 lg:space-y-16 lg:px-8">
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
       <div>
-        <div className="text-teal-600">
-          
-        </div>
-       
-      </div>
+            <div className="text-teal-600 mt-4">
+              <button className="bg-white hover:bg-gray-200 text-gray-800 font-bold py-4 px-8 rounded-lg inline-flex items-center border border-gray-300">
+                <svg
+                  className="fill-current w-6 h-6 mr-2"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                </svg>
+                <span>Download</span>
+              </button>
+            </div>
+          </div>
 
       <div className="grid grid-cols-1  sm:grid-cols-2 lg:col-span-2 lg:grid-cols-4">
       {/* gap-8 */}
