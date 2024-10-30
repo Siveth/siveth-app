@@ -1,0 +1,52 @@
+name: PWA CI/CD Workflow
+
+# Configuración de los desencadenadores
+on:
+  push:
+    branches:
+      - master
+      - MargeProcess-Release
+      - SCRUM-2-Develop-Alan
+      - SCRUM-1-Develop-Deisi
+  pull_request:
+    branches:
+      - master
+      - MargeProcess-Release
+  workflow_dispatch:
+
+# Definición de los trabajos (jobs)
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+        # Configuración de Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+
+        # Instalación de dependencias
+      - name: Cache npm dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install
+        
+
+      - name: Run TestCafe Tests
+        run: npm run testcafe
+      
+      - name: Run Tests
+        run:  echo "Desplegando la aplicación..."
