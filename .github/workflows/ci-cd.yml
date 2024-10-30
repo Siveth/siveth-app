@@ -44,7 +44,7 @@ jobs:
       - name: Install dependencies
         run: npm install
         
-
+       #Ejecutar pruebas de TestCafe
       - name: Run TestCafe Tests
         run: npm run testcafe
       
