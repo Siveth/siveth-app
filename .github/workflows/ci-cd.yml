@@ -5,46 +5,58 @@ on:
   push:
     branches:
       - master
-      - MargeProcess-Release
+      
   pull_request:
     branches:
       - master
-      - MargeProcess-Release
+      
   workflow_dispatch:
 
-# Definición de los (jobs)
+# Definición de los trabajos (jobs)
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
-    env:
-      REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      # Checkout del código fuente
+      - name: Checkout código
+        uses: actions/checkout@v4.2.1
 
-        # Configuración de Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      # Instalación de dependencias necesarias para Chrome headless
+      - name: Instalar dependencias necesarias para Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libnss3 \
+            libgconf-2-4 \
+            libxss1 \
+            libxi6 \
+            libgdk-pixbuf2.0-0 \
+            libgtk-3-0 \
+            xvfb \
+            fonts-liberation \
+            libappindicator3-1 \
+            libasound2
+
+      # Configuración de Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.X'  # Especifica la versión de Node.js
 
-        # Instalación de dependencias
-      - name: Cache npm dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      # Instalación de dependencias
+      - name: Instalar dependencias
+        run: |
+          npm ci --legacy-peer-deps
+          npm install -g testcafe --legacy-peer-deps  # Instala TestCafe globalmente
 
-      - name: Install dependencies
-        run: npm install
-        
-       #Ejecutar pruebas de TestCafe
-      - name: Run TestCafe Tests
-        run: npm run testcafe
-      
-      - name: Run Tests
-        run:  echo "Desplegando la aplicación..."
+      # Ejecutar pruebas de TestCafe en modo headless con Xvfb
+      - name: Ejecutar pruebas de TestCafe
+        run: |
+          xvfb-run -a npx testcafe chrome:headless tests/test.js --debug-on-fail # Asegúrate de que la ruta de test.js sea correcta
+
+      # (Opcional) Paso para desplegar la aplicación
+      - name: Desplegar aplicación
+        run: |
+          echo "Desplegando la aplicación..."
+          # Aquí iría el comando de despliegue, usando las variables de entorno necesarias
