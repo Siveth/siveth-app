@@ -82,7 +82,7 @@ export default function Header() {
     { name: "Cerrar sesión", action: handleLogout },
   ];
 
-  const products = [
+  const cotizacion = [
     {
       name: "Mudanzas",
       description: "Mudarte nunca habia sido tan facil",
@@ -227,7 +227,7 @@ export default function Header() {
             >
               <Popover.Panel className="absolute -left-14 top-full z-10 mt-3 w-max max-w-sm overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
                 <div className="p-4">
-                  {products.map((item) => (
+                  {cotizacion.map((item) => (
                     <div
                       key={item.name}
                       className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50"
@@ -349,7 +349,7 @@ export default function Header() {
         <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <a href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
+              <span className="sr-only">Viajes ramos</span>
               <img className="h-25 w-auto" src="/src/img/logo.png" alt="" />
             </a>
             <button
@@ -421,11 +421,11 @@ export default function Header() {
                         />
                       </Disclosure.Button>
                       <Disclosure.Panel className="mt-2 space-y-2">
-                        {products.map((item) => (
+                        {cotizacion.map((item) => (
                           <Disclosure.Button
                             key={item.name}
-                            as="a"
-                            href={item.to}
+                            as={Link}
+                            to={item.to}
                             className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
                             onClick={() => setMobileMenuOpen(false)}
                           >

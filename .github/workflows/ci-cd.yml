@@ -11,15 +11,19 @@ on:
       - MargeProcess-Release
   workflow_dispatch:
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
       REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+r
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
@@ -36,6 +40,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+
       - name: Install Chrome
         run: sudo apt-get install -y chromium-browser
 
@@ -44,3 +49,7 @@ jobs:
 
       - name: Deploy Application
         run: echo "Desplegando la aplicación..."
+
+        
+  
+

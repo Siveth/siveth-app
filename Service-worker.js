@@ -16,6 +16,8 @@ const urlsToCache = [
   '/assets/mudanzas.jpeg',
   '/assets/R.jpeg',
   '/assets/urban.png',
+  '/public/src/img/logo.png',
+  '/public/src/img/headerB.jpg',
   
 ];
 
