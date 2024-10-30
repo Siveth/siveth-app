@@ -1,6 +1,5 @@
 name: PWA CI/CD Workflow
 
-# Configuración de los desencadenadores
 on:
   push:
     branches:
