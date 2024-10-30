@@ -32,6 +32,7 @@
     "react-slick": "^0.29.0",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.8",
+    "testcafe": "^3.6.2",
     "vite-plugin-pwa": "^0.20.5",
     "workbox-cacheable-response": "^7.3.0",
     "workbox-expiration": "^7.3.0",
