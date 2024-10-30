@@ -6,8 +6,6 @@ on:
     branches:
       - master
       - MargeProcess-Release
-      - SCRUM-2-Develop-Alan
-      - SCRUM-1-Develop-Deisi
   pull_request:
     branches:
       - master
@@ -24,17 +22,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
         # Configuración de Node.js
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: '16.x'
 
         # Instalación de dependencias
       - name: Cache npm dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
