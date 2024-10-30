@@ -5,7 +5,7 @@ fixture`Getting Started`
 
 test('My first test', async t => {
   await t
-    .typeText('#developer-name','John Doe')
+    .typeText('#developer-name', 'John Doe')
     .click('#submit-button')
     .expect(Selector('#article-header').innerText).eql('Thank you, John Doe!');
 });
