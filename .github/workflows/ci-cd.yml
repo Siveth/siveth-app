@@ -12,7 +12,7 @@ on:
       - MargeProcess-Release
   workflow_dispatch:
 
-# Definición de los trabajos (jobs)
+# Definición de los (jobs)
 jobs:
   build:
     runs-on: ubuntu-latest
