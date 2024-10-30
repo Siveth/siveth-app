@@ -9,7 +9,6 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "testcafe": "testcafe edge:headless tests/**/*.test.js"
-
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",
