@@ -41,10 +41,13 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        
-       #Ejecutar pruebas de TestCafe
+      # Ejecutar pruebas de TestCafe
       - name: Run TestCafe Tests
         run: npm run testcafe
-      
+
+        # Ejecutar pruebas de JEST
+      - name: Run Jest Tests
+        run: npm test
+
       - name: Run Tests
-        run:  echo "Desplegando la aplicación..."
+        run: echo "Desplegando la aplicación..."
