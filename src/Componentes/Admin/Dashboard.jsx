@@ -5,6 +5,15 @@ import { Bars3Icon } from "@heroicons/react/24/outline";
 import { IoNotifications } from "react-icons/io5";
 import axios from "axios";
 
+async function requestNotificationPermission() {
+  const permission = await Notification.requestPermission();
+  if (permission === 'granted') {
+    console.log('Permiso de notificaciones concedido.');
+
+  } else { console.log('Permiso de notificaciones denegado.'); }
+}
+
+
 const Sidebar = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -51,19 +60,13 @@ const Sidebar = () => {
   useEffect(() => {
     const fetchTotalCotizacionesEnProceso = async () => {
       try {
-        const response = await axios.get(
-          "https://back-end-siveth-g8vc.vercel.app/api/NotificacionesM"
-        );
-        setTotalCotizacionesEnProceso(response.data.total);
-      } catch (error) {
-        console.error(
-          "Error al obtener el total de cotizaciones en proceso:",
-          error
-        );
-      }
-    };
-
-    fetchTotalCotizacionesEnProceso();
+        const response = await axios.get("https://back-end-siveth-g8vc.vercel.app/api/NotificacionesM"); setTotalCotizacionesEnProceso(response.data.total);
+        // Enviar notificación si hay cotizaciones pendientes
+        if (response.data.total > 0) {
+          new Notification("Tienes cotizaciones pendientes por revisar");
+        }
+      } catch (error) { console.error("Error al obtener el total de cotizaciones en proceso:", error); }
+    }; fetchTotalCotizacionesEnProceso();
   }, []);
 
   useEffect(() => {
@@ -117,7 +120,7 @@ const Sidebar = () => {
                 </div>
                 <div className="p-2 md:block text-left">
                   <h2 className="text-base font-semibold leading-6 text-white">
-                  <p className="text-white">Administrador</p>
+                    <p className="text-white">Administrador</p>
                     {/* {userName || "User Name"} */}
                   </h2>
                   {/* <p className="text-xs text-white">Administrador</p> */}
@@ -131,7 +134,7 @@ const Sidebar = () => {
                       to="/admin/perfil"
                       className="flex items-center text-[13px] py-1.5 px-4 text-gray-600 hover:text-[#f84525] hover:bg-gray-50"
                     >
-                      Profile
+                      Perfil
                     </Link>
                   </li>
                   <li>
@@ -139,7 +142,7 @@ const Sidebar = () => {
                       href="#"
                       className="flex items-center text-[13px] py-1.5 px-4 text-gray-600 hover:text-[#f84525] hover:bg-gray-50"
                     >
-                      Settings
+                      Configuración
                     </a>
                   </li>
                   <li>
@@ -152,7 +155,7 @@ const Sidebar = () => {
                           handleLogout();
                         }}
                       >
-                        Log Out
+                        Cerrar sesión
                       </a>
                     </form>
                   </li>

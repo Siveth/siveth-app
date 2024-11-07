@@ -91,3 +91,26 @@ registerRoute(
     ],
   })
 );
+
+// Evento de push
+self.addEventListener('push', (event) => {
+  const data = event.data.json();
+  const title = data.title || 'Notificación Push';
+  const options = {
+    body: data.body,
+    icon: data.icon || '/assets/mudanzas.jpeg', // Ícono por defecto
+    badge: data.badge || '/assets/mudanzas.jpeg', // Insignia por defecto
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
+});
+
+// Evento de click en notificación
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.openWindow('/')
+  );
+});
