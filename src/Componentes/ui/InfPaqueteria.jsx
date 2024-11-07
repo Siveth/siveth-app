@@ -44,7 +44,7 @@ const PaqueteriaModule = () => {
           </div>
 
           <div className="flex justify-center items-center">
-            <img src="/src/assets/R.jpeg" alt="Descripción de la imagen" className="w-64 h-auto"/>
+            <img src="/src/img/R.jpeg" alt="Descripción de la imagen" className="w-64 h-auto"/>
           </div>
 
           <div className="flex flex-col items-center">

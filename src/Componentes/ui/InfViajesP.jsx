@@ -44,7 +44,7 @@ const ViajesParticulares = () => {
           </div>
 
           <div className="flex justify-center items-center">
-            <img src="/src/assets/urban.png" alt="Descripción de la imagen" className="w-64 h-auto"/>
+            <img src="/src/img/urban.png" alt="Descripción de la imagen" className="w-64 h-auto"/>
           </div>
 
           <div className="flex flex-col items-center">

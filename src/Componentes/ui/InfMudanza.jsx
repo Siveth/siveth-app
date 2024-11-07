@@ -28,7 +28,7 @@ const ViajesEspecialesRamosModule = () => {
       <div className="border-t border-gray-200 pt-8">
       <div className="flex justify-between items-center mb-8">
         <div className="w-1/3">
-          <img src="/src/assets/mudanza.jpeg" alt="Viaje ilustración" className="w-full max-w-xs mx-auto" />
+          <img src="/src/img/mudanza.jpeg" alt="Viaje ilustración" className="w-full max-w-xs mx-auto" />
         </div>
         <div className="w-1/2 pl-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Tu Mudanza en 3 pasos:</h2>
