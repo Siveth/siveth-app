@@ -24,13 +24,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-        # Configuración de Node.js
+      # Configuración de Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '16.x'
 
-        # Instalación de dependencias
+      # Instalación de dependencias
       - name: Cache npm dependencies
         uses: actions/cache@v3
         with:
@@ -41,10 +41,10 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        
-       #Ejecutar pruebas de TestCafe
-      - name: Run TestCafe Tests
-        run: npm run testcafe
-      
+
+      # Ejecutar pruebas de Jest
+      - name: Run Jest Tests
+        run: npm test
+
       - name: Run Tests
-        run:  echo "Desplegando la aplicación..."
+        run: echo "Desplegando la aplicación..."

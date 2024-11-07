@@ -1,11 +1,15 @@
-import { Selector } from 'testcafe';
+import React from 'react'; // Importa React
+import '@testing-library/jest-dom'; // Para las aserciones adicionales
+import { render, screen } from '@testing-library/react';
+import Login from './Login'; // Asegúrate de que esta ruta sea correcta
 
-fixture`Getting Started`
-  .page`https://devexpress.github.io/testcafe/example`;
-
-test('My first test', async t => {
-  await t
-    .typeText('#developer-name', 'John Doe')
-    .click('#submit-button')
-    .expect(Selector('#article-header').innerText).eql('Thank you, John Doe!');
+describe('Login Component', () => {
+  test('renders login form', () => {
+    render(<Login />);
+    
+    // Verificamos que los campos de entrada y el botón estén presentes
+    expect(screen.getByPlaceholderText(/username/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/password/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
+  });
 });
