@@ -7,12 +7,17 @@ const CACHE_NAME = 'my-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/',
   '/Terminos',
   '/Privacidad',
   '/InformacionM',
   '/InformacionP',
   '/InformacionVP',  
+  '/assets/mudanzas.jpeg',
+  '/assets/R.jpeg',
+  '/assets/urban.png',
+  '/public/src/img/logo.png',
+  '/public/src/img/headerB.jpg',
+  
 ];
 
 self.addEventListener('install', (event) => {
