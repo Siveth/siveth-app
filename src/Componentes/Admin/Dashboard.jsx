@@ -5,21 +5,21 @@ import { Bars3Icon } from "@heroicons/react/24/outline";
 import { IoNotifications } from "react-icons/io5";
 import axios from "axios";
 
+// Función para pedir permiso de notificaciones
 async function requestNotificationPermission() {
   const permission = await Notification.requestPermission();
   if (permission === 'granted') {
     console.log('Permiso de notificaciones concedido.');
-
-  } else { console.log('Permiso de notificaciones denegado.'); }
+  } else {
+    console.log('Permiso de notificaciones denegado.');
+  }
 }
-
 
 const Sidebar = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [totalCotizacionesEnProceso, setTotalCotizacionesEnProceso] =
-    useState(0);
-  const [userName, setUserName] = useState(""); // Nuevo estado para el nombre del usuario
+  const [totalCotizacionesEnProceso, setTotalCotizacionesEnProceso] = useState(0);
+  const [userName, setUserName] = useState("");
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ const Sidebar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("roleId");
-    localStorage.removeItem("userName"); // También elimina el nombre del usuario si es necesario
+    localStorage.removeItem("userName");
     navigate("/Login");
   };
 
@@ -60,21 +60,26 @@ const Sidebar = () => {
   useEffect(() => {
     const fetchTotalCotizacionesEnProceso = async () => {
       try {
-        const response = await axios.get("https://back-end-siveth-g8vc.vercel.app/api/NotificacionesM"); setTotalCotizacionesEnProceso(response.data.total);
-        // Enviar notificación si hay cotizaciones pendientes
-        if (response.data.total > 0) {
-          new Notification("Tienes cotizaciones pendientes por revisar");
+        const response = await axios.get("https://back-end-siveth-g8vc.vercel.app/api/NotificacionesM");
+        if (response.data.total > totalCotizacionesEnProceso) {
+          new Notification("Tienes nuevas cotizaciones pendientes por revisar");
         }
-      } catch (error) { console.error("Error al obtener el total de cotizaciones en proceso:", error); }
-    }; fetchTotalCotizacionesEnProceso();
-  }, []);
+        setTotalCotizacionesEnProceso(response.data.total);
+      } catch (error) {
+        console.error("Error al obtener el total de cotizaciones en proceso:", error);
+      }
+    };
+    fetchTotalCotizacionesEnProceso();
+  }, [totalCotizacionesEnProceso]);
 
   useEffect(() => {
-    const storedUserName = localStorage.getItem("userName"); // Obtén el nombre del usuario de localStorage
+    const storedUserName = localStorage.getItem("userName");
     if (storedUserName) {
-      setUserName(storedUserName); // Actualiza el estado con el nombre del usuario
+      setUserName(storedUserName);
     }
+    requestNotificationPermission();
   }, []);
+
 
   return (
     <>
@@ -120,7 +125,7 @@ const Sidebar = () => {
                 </div>
                 <div className="p-2 md:block text-left">
                   <h2 className="text-base font-semibold leading-6 text-white">
-                    <p className="text-white">Administrador</p>
+                    <p className="text-white">Empleado</p>
                     {/* {userName || "User Name"} */}
                   </h2>
                   {/* <p className="text-xs text-white">Administrador</p> */}
