@@ -11,12 +11,26 @@ const urlsToCache = [
   '/Privacidad',
   '/InformacionM',
   '/InformacionP',
-  '/InformacionVP',  
-  '/assets/mudanzas.jpeg',
-  '/assets/R.jpeg',
-  '/assets/urban.png',
+  '/InformacionVP',
+  
+  '/public/src/img/mudanza.jpeg',// ruta img servicios
+  '/public/src/img/R.jpeg',
+  '/public/src/img/urban.png',
+
   '/public/src/img/logo.png',
   '/public/src/img/headerB.jpg',
+
+  '/public/src/img/1.png', // Ruta img slider
+  '/public/src/img/2.png',
+  '/public/src/img/3.png',
+  '/public/src/img/4.jpeg',
+ ,
+
+  '/public/src/img/Guadalajara.jpg', //rutas cards
+  '/public/src/img/Monterrey.jpeg',
+  '/public/src/img/Queretaro.jpeg',
+  '/public/src/img/Tampico.jpeg',
+  '/public/src/img/Valles.jpg',
   
 ];
 
