@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { EmailProvider } from './Estado/usecontext.jsx';
 import Header from "./Componentes/Usuario/header.jsx";
 import Footer from "./Componentes/Usuario/footer.jsx";
@@ -44,24 +44,34 @@ import PaqueteriaModule from "./Componentes/ui/InfPaqueteria.jsx";
 import ViajesParticulares from "./Componentes/ui/InfViajesP.jsx";
 import DestinosAdmin from "./views/Private/DestinosAdmin.jsx";
 import CodigoA from "./Componentes/ui/CodigoA.jsx";
-
 import Alexa from "./views/Public/AlexaIntegrate.jsx";
-import AutobusEmpleado from  "./views/Private/BoletosEmpleado.jsx";
-
+import AutobusEmpleado from "./views/Private/BoletosEmpleado.jsx";
 import 'tailwindcss/tailwind.css';
 
+// Función para pedir permiso de notificaciones
+async function requestNotificationPermission() {
+  const permission = await Notification.requestPermission();
+  if (permission === 'granted') {
+    console.log('Permiso de notificaciones concedido.');
+  } else {
+    console.log('Permiso de notificaciones denegado.');
+  }
+}
 
 
 function App() {
   // Recuperar el correo electrónico del localStorage
   const [userEmail, setUserEmail] = useState(localStorage.getItem('email'));
 
+  useEffect(() => {
+    requestNotificationPermission();
+  }, []);
+
   const PublicRoutes = () => (
     <>
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        
         <Route path="/Login" element={<Login />} />
         <Route path="/Registro" element={<Registro />} />
         <Route path="/Calculadora" element={<Calculadora />} />
@@ -79,18 +89,17 @@ function App() {
         <Route path="/Mudanzas" element={<Mudanzas />} />
         <Route path="/ViajesParticulares" element={<Particulares />} />
         <Route path="/Paqueteria" element={<Paqueteria />} />
-        <Route path="/MudanzaM" element={<Mudanda /> } />
-        <Route path="/PaqueteriaP" element={<PaqueteriaP /> }/>
-        <Route path="/ViajesV" element={<ViajesV /> }/>
-        <Route path="/Servicio" element={<Service /> }/>
-        <Route path="/Demanda" element={<DemandaEstetica /> }/>
-        <Route path="/Privacidad" element={<Privacidad /> }/>
-        <Route path="/Terminos" element={<Terminos /> }/>
-        <Route path="/InformacionM" element={<MudanzaModule /> }/>
-        <Route path="/InformacionP" element={<PaqueteriaModule /> }/>
-        <Route path="/InformacionVP" element={<ViajesParticulares /> }/>
-        <Route path="/SixDigitCode" element={<CodigoA /> }/>
-        
+        <Route path="/MudanzaM" element={<Mudanda />} />
+        <Route path="/PaqueteriaP" element={<PaqueteriaP />} />
+        <Route path="/ViajesV" element={<ViajesV />} />
+        <Route path="/Servicio" element={<Service />} />
+        <Route path="/Demanda" element={<DemandaEstetica />} />
+        <Route path="/Privacidad" element={<Privacidad />} />
+        <Route path="/Terminos" element={<Terminos />} />
+        <Route path="/InformacionM" element={<MudanzaModule />} />
+        <Route path="/InformacionP" element={<PaqueteriaModule />} />
+        <Route path="/InformacionVP" element={<ViajesParticulares />} />
+        <Route path="/SixDigitCode" element={<CodigoA />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
@@ -101,15 +110,14 @@ function App() {
     <>
       <Sidebar />
       <Routes>
-      <Route path="/CotizaM" element={<Mudanza /> }/>
-      <Route path="/CotizaP" element={<CotizaP /> }/>
-      <Route path="/CotizaV" element={<CotizaV /> }/>
+        <Route path="/CotizaM" element={<Mudanza />} />
+        <Route path="/CotizaP" element={<CotizaP />} />
+        <Route path="/CotizaV" element={<CotizaV />} />
         <Route path="/reportes" element={<Reportes />} />
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/records" element={<RecordsAdmin />} />
         <Route path="/Slider" element={<SliderAdmin />} /> {/* Nueva ruta */}
-        <Route path="/Destinos" element={<DestinosAdmin /> }/>
-       
+        <Route path="/Destinos" element={<DestinosAdmin />} />
       </Routes>
     </>
   );
@@ -118,16 +126,16 @@ function App() {
     <>
       <Sidebar />
       <Routes>
-      <Route path="/CotizaM" element={<Mudanza /> }/>
-      <Route path="/CotizaP" element={<CotizaP /> }/>
-      <Route path="/CotizaV" element={<CotizaV /> }/>
-      <Route path="/reportes" element={<Reportes />} />
-      <Route path="/perfil" element={<Perfil />} />
-      <Route path="/compraBoletos" element={<AutobusEmpleado /> }/>
-      <Route path="/Boletos" element={<EmpleadoBoletos />} />
+        <Route path="/CotizaM" element={<Mudanza />} />
+        <Route path="/CotizaP" element={<CotizaP />} />
+        <Route path="/CotizaV" element={<CotizaV />} />
+        <Route path="/reportes" element={<Reportes />} />
+        <Route path="/perfil" element={<Perfil />} />
+        <Route path="/compraBoletos" element={<AutobusEmpleado />} />
+        <Route path="/Boletos" element={<EmpleadoBoletos />} />
       </Routes>
     </>
-  )
+  );
 
   return (
     <EmailProvider userEmail={userEmail}>
@@ -139,7 +147,7 @@ function App() {
           />
           <Route
             path="/empleado/*"
-            element={<ProtectedRoute element={<EmpleadoRoutes />} roles={[ 2]} />}
+            element={<ProtectedRoute element={<EmpleadoRoutes />} roles={[2]} />}
           />
           <Route path="/*" element={<PublicRoutes />} />
         </Routes>

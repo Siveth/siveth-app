@@ -158,40 +158,24 @@ const Perfil = () => {
             <div className="w-full md:w-3/12 md:mx-2">
               <div className="bg-white p-3 border-t-4 border-blue-400">
                 <div className="image overflow-hidden">
-                  <img
-                    className="h-auto w-full mx-auto"
-                    src="https://lavinephotography.com.au/wp-content/uploads/2017/01/PROFILE-Photography-112.jpg"
-                    alt=""
-                  />
+                  <img className="h-auto w-full mx-auto" src="https://lavinephotography.com.au/wp-content/uploads/2017/01/PROFILE-Photography-112.jpg" alt="" />
                 </div>
-                <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">
-                  Jane Doe
-                </h1>
-                <h3 className="text-gray-600 font-lg text-semibold leading-6">
-                  Owner at Her Company Inc.
-                </h3>
-                <p className="text-sm text-gray-500 hover:text-gray-600 leading-6">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Reprehenderit, eligendi dolorum sequi illum qui unde
-                  aspernatur non deserunt
-                </p>
+                <div className="md:w-full text-center mb-8 md:mb-0">
+                  <img src="https://i.pravatar.cc/300" alt="Profile Picture" className="rounded-full w-48 h-auto mx-auto mb-4 border-4 border-indigo-800 dark:border-blue-900 transition-transform duration-300 hover:scale-105" />
+                  
+                  <button className="mt-4 bg-indigo-800 text-white px-4 py-2 rounded-lg hover:bg-blue-900 transition-colors duration-300"> Editar foto </button>
+                </div>
                 <ul className="bg-gray-100 text-gray-600 hover:text-gray-700 hover:shadow py-2 px-3 mt-3 divide-y rounded shadow-sm">
-                  <li className="flex items-center py-3">
-                    <span>Status</span>
-                    <span className="ml-auto">
-                      <span className="bg-green-500 py-1 px-2 rounded text-white text-sm">
-                        Active
-                      </span>
-                    </span>
+                  <li className="flex items-center py-3"> <span>Status</span> <span className="ml-auto">
+                    <span className="bg-green-500 py-1 px-2 rounded text-white text-sm"> Active </span>
+                  </span>
                   </li>
                   <li className="flex items-center py-3">
                     <span>Member since</span>
-                    <span className="ml-auto">Nov 07, 2016</span>
-                  </li>
+                    <span className="ml-auto">Nov 07, 2016</span> </li>
                 </ul>
               </div>
             </div>
-
             <div className="w-full md:w-9/12 mx-2 md:h-64">
               <div className="bg-white p-3 shadow-sm rounded-sm">
                 <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
@@ -229,11 +213,10 @@ const Perfil = () => {
                                   name="Nombre"
                                   value={formData.Nombre}
                                   onChange={handleChange}
-                                  className={`w-full rounded border ${
-                                    errors.Nombre
-                                      ? "border-red-500"
-                                      : "border-gray-300"
-                                  } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800`}
+                                  className={`w-full rounded border ${errors.Nombre
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                                    } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800`}
                                 />
                                 {errors.Nombre && (
                                   <p className="text-red-500 text-xs mt-1">
@@ -256,11 +239,10 @@ const Perfil = () => {
                                   name="ApellidoP"
                                   value={formData.ApellidoP}
                                   onChange={handleChange}
-                                  className={`w-full rounded border ${
-                                    errors.ApellidoP
-                                      ? "border-red-500"
-                                      : "border-gray-300"
-                                  } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
+                                  className={`w-full rounded border ${errors.ApellidoP
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                                    } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
                                 />
                                 {errors.ApellidoP && (
                                   <p className="text-red-500 text-xs mt-1 max-w-xs">
@@ -285,11 +267,10 @@ const Perfil = () => {
                                   name="ApellidoM"
                                   value={formData.ApellidoM}
                                   onChange={handleChange}
-                                  className={`w-full rounded border ${
-                                    errors.ApellidoM
-                                      ? "border-red-500"
-                                      : "border-gray-300"
-                                  } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
+                                  className={`w-full rounded border ${errors.ApellidoM
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                                    } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
                                 />
                                 {errors.ApellidoM && (
                                   <p className="text-red-500 text-xs mt-1 max-w-xs">
@@ -314,11 +295,10 @@ const Perfil = () => {
                                   name="Usuario"
                                   value={formData.Usuario}
                                   onChange={handleChange}
-                                  className={`w-full rounded border ${
-                                    errors.Usuario
-                                      ? "border-red-500"
-                                      : "border-gray-300"
-                                  } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
+                                  className={`w-full rounded border ${errors.Usuario
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                                    } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
                                 />
                                 {errors.Usuario && (
                                   <p className="text-red-500 text-xs mt-1 max-w-xs">
@@ -341,11 +321,10 @@ const Perfil = () => {
                                   name="Telefono"
                                   value={formData.Telefono}
                                   onChange={handleChange}
-                                  className={`w-full rounded border ${
-                                    errors.Telefono
-                                      ? "border-red-500"
-                                      : "border-gray-300"
-                                  } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
+                                  className={`w-full rounded border ${errors.Telefono
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                                    } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
                                 />
                                 {errors.Telefono && (
                                   <p className="text-red-500 text-xs mt-1 max-w-xs">
@@ -368,11 +347,10 @@ const Perfil = () => {
                                   name="Correo"
                                   value={formData.Correo}
                                   onChange={handleChange}
-                                  className={`w-full rounded border ${
-                                    errors.Correo
-                                      ? "border-red-500"
-                                      : "border-gray-300"
-                                  } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
+                                  className={`w-full rounded border ${errors.Correo
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                                    } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
                                 />
                                 {errors.Correo && (
                                   <p className="text-red-500 text-xs mt-1 max-w-xs">
@@ -395,11 +373,10 @@ const Perfil = () => {
                                   name="Password"
                                   value={formData.Password}
                                   onChange={handleChange}
-                                  className={`w-full rounded border ${
-                                    errors.Password
-                                      ? "border-red-500"
-                                      : "border-gray-300"
-                                  } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
+                                  className={`w-full rounded border ${errors.Password
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                                    } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
                                 />
                                 {errors.Password && (
                                   <p className="text-red-500 text-xs mt-1 max-w-xs">
@@ -422,11 +399,10 @@ const Perfil = () => {
                                   name="DescripcionPregunta"
                                   value={formData.DescripcionPregunta}
                                   onChange={handleChange}
-                                  className={`w-full rounded border ${
-                                    errors.DescripcionPregunta
-                                      ? "border-red-500"
-                                      : "border-gray-300"
-                                  } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
+                                  className={`w-full rounded border ${errors.DescripcionPregunta
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                                    } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
                                 >
                                   <option value="">
                                     Selecciona una pregunta
@@ -436,7 +412,7 @@ const Perfil = () => {
                                       key={pregunta.id}
                                       value={pregunta.Descripcion} // Corregido: debería ser pregunta.Descripcion
                                     >
-                                      {pregunta.Descripcion} 
+                                      {pregunta.Descripcion}
                                     </option>
                                   ))}
                                 </select>
@@ -463,11 +439,10 @@ const Perfil = () => {
                                   name="Respuesta"
                                   value={formData.Respuesta}
                                   onChange={handleChange}
-                                  className={`w-full rounded border ${
-                                    errors.Respuesta
-                                      ? "border-red-500"
-                                      : "border-gray-300"
-                                  } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
+                                  className={`w-full rounded border ${errors.Respuesta
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                                    } bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800 max-w-xs`}
                                 />
                                 {errors.Respuesta && (
                                   <p className="text-red-500 text-xs mt-1 max-w-xs">
