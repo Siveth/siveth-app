@@ -13,7 +13,7 @@ const urlsToCache = [
   '/InformacionP',
   '/InformacionVP',
   
-  '/public/src/img/mudanza.jpeg',// ruta img servicios
+  '/public/src/img/mudanza.jpeg', // ruta img servicios
   '/public/src/img/R.jpeg',
   '/public/src/img/urban.png',
 
@@ -24,14 +24,12 @@ const urlsToCache = [
   '/public/src/img/2.png',
   '/public/src/img/3.png',
   '/public/src/img/4.jpeg',
- ,
 
   '/public/src/img/Guadalajara.jpg', //rutas cards
   '/public/src/img/Monterrey.jpeg',
   '/public/src/img/Queretaro.jpeg',
   '/public/src/img/Tampico.jpeg',
   '/public/src/img/Valles.jpg',
-  
 ];
 
 self.addEventListener('install', (event) => {
@@ -73,27 +71,10 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Registro de rutas usando Workbox
 registerRoute(
-  ({ request }) => request.destination === 'image',
+  ({ request }) => request.destination === 'document' || request.destination === 'script' || request.destination === 'style',
   new StaleWhileRevalidate({
-    cacheName: 'image-cache',
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200],
-      }),
-      new ExpirationPlugin({
-        maxEntries: 60,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
-      }),
-    ],
-  })
-);
-
-registerRoute(
-  ({ request }) => request.destination === 'document',
-  new StaleWhileRevalidate({
-    cacheName: 'pages-cache',
+    cacheName: 'assets-cache',
     plugins: [
       new CacheableResponsePlugin({
         statuses: [0, 200],
