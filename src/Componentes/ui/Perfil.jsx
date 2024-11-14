@@ -14,9 +14,16 @@ const Perfil = () => {
     Password: "",
     DescripcionPregunta: "",
     Respuesta: "",
+    Foto: "",
   });
   const [errors, setErrors] = useState({});
   const [preguntas, setPreguntas] = useState([]);
+  const [photo, setPhoto] = useState(null);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const [capturing, setCapturing] = useState(false);
+  const [videoStream, setVideoStream] = useState(null);
+  const [readyToCapture, setReadyToCapture] = useState(false); // Estado para controlar cuando el botón de captura aparece
+  const [isPhotoUpdated, setIsPhotoUpdated] = useState(false);
 
   useEffect(() => {
     const obtenerUsuario = async () => {
@@ -102,93 +109,297 @@ const Perfil = () => {
 
     setErrors({ ...errors, [name]: error });
   };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Validar que todos los campos requeridos estén completos
+    
+    // Validar si el correo del usuario está disponible
+    if (!usuario || !usuario.Correo) {
+      console.error("El correo del usuario no está disponible");
+      return;
+    }
+  
+    // Verificar si los campos obligatorios están completos
     const requiredFields = [
-      "Nombre",
-      "ApellidoP",
-      "ApellidoM",
-      "Usuario",
-      "Telefono",
-      "Correo",
-      "Password",
-      "DescripcionPregunta",
-      "Respuesta",
+      "Nombre", "ApellidoP", "ApellidoM", "Usuario", "Telefono", "Correo", "Password", "DescripcionPregunta", "Respuesta"
     ];
     const missingFields = requiredFields.filter((field) => !formData[field]);
-
+  
     if (missingFields.length > 0) {
       alert(`Por favor, completa los campos: ${missingFields.join(", ")}`);
       return;
     }
-
+  
+    // Crear un nuevo FormData para enviar los datos del formulario
+    const dataToSend = new FormData();
+  
+    // Agregar los datos del formulario al FormData
+    Object.keys(formData).forEach((key) => {
+      if (formData[key]) {
+        dataToSend.append(key, formData[key]);
+      }
+    });
+  
+    // Si la foto se actualiza, agregarla al FormData
+    if (isPhotoUpdated && photo) {
+      try {
+        const photoBlob = await fetch(photo).then(res => res.blob());
+        dataToSend.append("image", photoBlob, "photo.png");
+      } catch (error) {
+        console.error("Error al procesar la foto:", error);
+        return;
+      }
+    }
+  
     try {
       const token = localStorage.getItem("token");
       if (!token) {
+        console.error("No se encontró el token de autenticación");
         return;
       }
-      console.log("Datos a enviar:", formData);
+  
       const response = await Axios.put(
         `https://back-end-siveth-g8vc.vercel.app/api/updateUser/${usuario.Correo}`,
-        formData,
+        dataToSend,
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-
+  
       setUsuario(response.data);
       setEditMode(false);
+      setIsPhotoUpdated(false); // Resetear la actualización de la foto
+      alert("Foto de perfil actualizada correctamente"); // Mensaje de éxito
     } catch (error) {
       console.error("Error al actualizar los datos del usuario:", error);
     }
   };
+  
+  
+  
+  
+      
+  const handlePhotoChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setPhoto(URL.createObjectURL(file));
+      setIsPhotoUpdated(true); // Foto subida correctamente
+      setShowPhotoModal(false);
+    }
+  };
+
+  const handleCapture = async () => {
+    if (!capturing) {
+      setCapturing(true);
+      setReadyToCapture(true); // Activamos el botón de capturar ahora
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
+        setVideoStream(stream);
+        const video = document.createElement("video");
+        video.srcObject = stream;
+        video.play();
+
+        // Mostrar el video en el modal
+        const videoContainer = document.getElementById("video-container");
+        videoContainer.appendChild(video);
+      } catch (error) {
+        console.error("Error al acceder a la cámara:", error);
+        alert("No se pudo acceder a la cámara. Verifica los permisos.");
+      }
+    } else {
+      setCapturing(false);
+      setReadyToCapture(false); // Desactivamos el botón de capturar ahora
+      setVideoStream(null);
+      setPhoto(null);
+
+      // Detener la transmisión de video al desactivar la captura
+      if (videoStream) {
+        const tracks = videoStream.getTracks();
+        tracks.forEach((track) => track.stop()); // Detenemos todos los tracks de la cámara
+      }
+
+      // Opcional: Ocultar el video al detener la captura
+      const videoContainer = document.getElementById("video-container");
+      if (videoContainer) {
+        videoContainer.innerHTML = ""; // Limpiar el contenedor de video
+      }
+    }
+  };
+
+  const handleCaptureImage = () => {
+    if (capturing) {
+      const video = document.querySelector("video");
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext("2d").drawImage(video, 0, 0);
+      const photoURL = canvas.toDataURL("image/png");
+      setPhoto(photoURL);
+      setIsPhotoUpdated(true); // Foto capturada correctamente
+      setFormData({ ...formData, Foto: photoURL }); // Guardar la foto en el estado del formulario
+      setShowPhotoModal(false);
+
+      // Detener la transmisión de video después de capturar la imagen
+      setCapturing(false);
+      setReadyToCapture(false);
+      setVideoStream(null);
+
+      // Detener los "tracks" de video (desactivar la cámara y apagar la luz del sensor)
+      if (videoStream) {
+        const tracks = videoStream.getTracks();
+        tracks.forEach((track) => track.stop()); // Detenemos todos los tracks de la cámara
+      }
+
+      // Limpiar el contenedor de video
+      const videoContainer = document.getElementById("video-container");
+      if (videoContainer) {
+        videoContainer.innerHTML = ""; // Limpiar el contenedor de video
+      }
+    }
+  };
+
+  const handleCancelPhotoUpdate = () => {
+    setPhoto(null);
+    setIsPhotoUpdated(false);
+    setShowPhotoModal(false);
+    setCapturing(false);
+    setReadyToCapture(false);
+    setVideoStream(null);
+  };
+  const stopCamera = () => {
+    if (videoStream) {
+      const tracks = videoStream.getTracks();
+      tracks.forEach((track) => track.stop()); // Detenemos todos los tracks de la cámara
+    }
+
+    // Limpiar el contenedor de video
+    const videoContainer = document.getElementById("video-container");
+    if (videoContainer) {
+      videoContainer.innerHTML = ""; // Limpiar el contenedor de video
+    }
+
+    // Opcional: Resetear estados relacionados con la captura de imagen
+    setCapturing(false);
+    setReadyToCapture(false);
+  };
+
+  const handleUpdatePhoto = async () => {
+    // Aquí puedes agregar la lógica para subir la nueva foto al servidor o almacenarla
+    setIsPhotoUpdated(false); // Resetear el estado
+
+    // Detener la cámara y limpiar el estado después de la actualización
+    if (videoStream) {
+      const tracks = videoStream.getTracks();
+      tracks.forEach((track) => track.stop()); // Detenemos todos los tracks de la cámara
+    }
+
+    setCapturing(false);
+    setReadyToCapture(false);
+    setVideoStream(null);
+
+    // Limpiar el contenedor de video
+    const videoContainer = document.getElementById("video-container");
+    if (videoContainer) {
+      videoContainer.innerHTML = ""; // Limpiar el contenedor de video
+    }
+
+    alert("Foto de perfil actualizada correctamente");
+  };
 
   return (
     <div>
-      <div className="">
-        <div className="w-full text-white bg-main-color"></div>
-
+      <div className="w-full text-white bg-main-color">
         <div className="container mx-auto my-5 p-5">
           <div className="md:flex no-wrap md:-mx-2 ">
             <div className="w-full md:w-3/12 md:mx-2">
               <div className="bg-white p-3 border-t-4 border-blue-400">
                 <div className="image overflow-hidden">
-                  <img
-                    className="h-auto w-full mx-auto"
-                    src="https://lavinephotography.com.au/wp-content/uploads/2017/01/PROFILE-Photography-112.jpg"
-                    alt=""
-                  />
                 </div>
-                <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">
-                  Jane Doe
-                </h1>
-                <h3 className="text-gray-600 font-lg text-semibold leading-6">
-                  Owner at Her Company Inc.
-                </h3>
-                <p className="text-sm text-gray-500 hover:text-gray-600 leading-6">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Reprehenderit, eligendi dolorum sequi illum qui unde
-                  aspernatur non deserunt
-                </p>
-                <ul className="bg-gray-100 text-gray-600 hover:text-gray-700 hover:shadow py-2 px-3 mt-3 divide-y rounded shadow-sm">
-                  <li className="flex items-center py-3">
-                    <span>Status</span>
-                    <span className="ml-auto">
-                      <span className="bg-green-500 py-1 px-2 rounded text-white text-sm">
-                        Active
-                      </span>
-                    </span>
-                  </li>
-                  <li className="flex items-center py-3">
-                    <span>Member since</span>
-                    <span className="ml-auto">Nov 07, 2016</span>
-                  </li>
-                </ul>
+                <div className="md:w-full text-center mb-8 md:mb-0">
+                  <img
+                  
+               
+                  src={photo || `https://${import.meta.env.VITE_AWS_BUCKET_NAME}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/${formData.Foto}`}
+                
+                    alt="Profile Picture"
+                    className="rounded-full w-32 h-32 mx-auto"
+                  />
+                  <div className="flex justify-center mt-4">
+                    {isPhotoUpdated ? (
+                      <>
+                        <button
+                          onClick={handleSubmit}
+                          className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+                        >
+                          Actualizar
+                        </button>
+                        <button
+                          onClick={handleCancelPhotoUpdate}
+                          className="bg-red-500 text-white px-4 py-2 rounded"
+                        >
+                          Cancelar
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => setShowPhotoModal(true)}
+                        className="bg-indigo-500 text-white px-4 py-2 rounded"
+                      >
+                        Editar foto
+                      </button>
+                    )}
+                  </div>
+                </div>
+                {showPhotoModal && (
+                  <div>
+                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 z-50"></div>
+                    <div className="fixed inset-0 flex justify-center items-center z-50">
+                      <div className="bg-white p-5 rounded shadow-lg w-96 relative">
+                        {/* Botón de cerrar en la esquina superior izquierda */}
+                        <button
+                          onClick={() => {
+                            setShowPhotoModal(false);
+                            stopCamera(); // Llamar a stopCamera cuando se cierre el modal
+                          }}
+                          className="absolute top-2 left-2 text-gray-700 text-xl font-bold"
+                        >
+                          ×
+                        </button>
+
+                        <h3 className="text-lg">Selecciona una opción</h3>
+                        <div className="mt-4">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handlePhotoChange}
+                            className="bg-blue-500 text-white py-2 px-4 rounded"
+                          />
+                          <button
+                            onClick={handleCapture}
+                            className="bg-red-500 text-white py-2 px-4 rounded"
+                          >
+                            {capturing
+                              ? "Detener captura"
+                              : "Capturar imagen con la cámara"}
+                          </button>
+                          {readyToCapture && (
+                            <button
+                              onClick={handleCaptureImage}
+                              className="mt-2 bg-green-500 text-white py-2 px-4 rounded"
+                            >
+                              Capturar ahora
+                            </button>
+                          )}
+                          <div id="video-container" className="mt-4"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -436,7 +647,7 @@ const Perfil = () => {
                                       key={pregunta.id}
                                       value={pregunta.Descripcion} // Corregido: debería ser pregunta.Descripcion
                                     >
-                                      {pregunta.Descripcion} 
+                                      {pregunta.Descripcion}
                                     </option>
                                   ))}
                                 </select>
