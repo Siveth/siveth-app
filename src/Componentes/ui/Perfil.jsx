@@ -321,8 +321,7 @@ const Perfil = () => {
                 </div>
                 <div className="md:w-full text-center mb-8 md:mb-0">
                   <img
-                  
-               
+                              
                   src={photo || `https://${import.meta.env.VITE_AWS_BUCKET_NAME}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/${formData.Foto}`}
                 
                     alt="Profile Picture"
