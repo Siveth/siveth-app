@@ -46,5 +46,15 @@ jobs:
       - name: Run Jest Tests
         run: npm test
 
-      - name: Run Tests
-        run: echo "Desplegando la aplicación..."
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Build project 
+        run: CI=false npm run build  
+
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        run: vercel --prod --token $VERCEL_TOKEN --yes
