@@ -47,7 +47,7 @@ import CodigoA from "./Componentes/ui/CodigoA.jsx";
 import Alexa from "./views/Public/AlexaIntegrate.jsx";
 import AutobusEmpleado from "./views/Private/BoletosEmpleado.jsx";
 import 'tailwindcss/tailwind.css';
-import { Analytics } from "@vercel/analytics/react"
+
 
 // Función para pedir permiso de notificaciones
 async function requestNotificationPermission() {
