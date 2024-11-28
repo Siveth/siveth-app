@@ -4,7 +4,6 @@ import App from './App.jsx';
 import './index.css';
 import { HelmetProvider } from "react-helmet-async";
 import 'react-chatbot-kit/build/main.css';
-import { Analytics } from "@vercel/analytics/react"
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -20,7 +19,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <HelmetProvider>
       <App />
-      <Analytics />
     </HelmetProvider>
   </React.StrictMode>,
 );
