@@ -163,7 +163,7 @@ const Perfil = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+            // Axios manejará automáticamente el Content-Type
           },
         }
       );
@@ -174,6 +174,18 @@ const Perfil = () => {
       alert("Foto de perfil actualizada correctamente"); // Mensaje de éxito
     } catch (error) {
       console.error("Error al actualizar los datos del usuario:", error);
+      if (error.response) {
+        // El servidor respondió con un código de estado que no está en el rango 2xx
+        console.error("Data:", error.response.data);
+        console.error("Status:", error.response.status);
+        console.error("Headers:", error.response.headers);
+      } else if (error.request) {
+        // La solicitud fue hecha pero no se recibió respuesta
+        console.error("Request:", error.request);
+      } else {
+        // Algo pasó al configurar la solicitud
+        console.error("Error:", error.message);
+      }
     }
   };
   

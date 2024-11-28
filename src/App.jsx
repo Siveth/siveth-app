@@ -47,6 +47,11 @@ import CodigoA from "./Componentes/ui/CodigoA.jsx";
 import Alexa from "./views/Public/AlexaIntegrate.jsx";
 import AutobusEmpleado from "./views/Private/BoletosEmpleado.jsx";
 import 'tailwindcss/tailwind.css';
+//monitoreo vercel 
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
+
+
 
 // Función para pedir permiso de notificaciones
 async function requestNotificationPermission() {
@@ -152,6 +157,9 @@ function App() {
           <Route path="/*" element={<PublicRoutes />} />
         </Routes>
       </Router>
+      <Analytics />
+      <SpeedInsights />
+
     </EmailProvider>
   );
 }
